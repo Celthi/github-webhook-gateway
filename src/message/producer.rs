@@ -3,7 +3,7 @@ use crate::github::event::GithubEvent;
 use crate::message;
 use crate::queue;
 use anyhow::Result;
-pub fn produce_message_from(event: GithubEvent) -> Result<()> {
+pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
     let action = event.get_action();
     if action == "deleted" {
         return Ok(());

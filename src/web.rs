@@ -1,4 +1,4 @@
-use crate::github::event::GithubEvent;
+use crate::github;
 
 use crate::message;
 use anyhow::Result;
@@ -16,7 +16,7 @@ pub async fn event_loop() -> Result<(), std::io::Error> {
     let router = Route::new();
     let app = router
         .at("/healthz", health_check)
-        .at("/backend_webhook", post(process_github_event_ep))
+        .at("/ocr_webhook", post(process_github_event_ep))
         .with(Tracing);
     Server::new(TcpListener::bind("0.0.0.0:31430"))
         .run(app)
@@ -31,35 +31,32 @@ fn process_github_event_ep(req: String) -> Json<serde_json::Value> {
     if !req.contains("KEYWORD") && !req.contains("KEYWORD2") {
         return Json(serde_json::json! ({
             "code": 0,
-            "message": "Not backend_ comment.",
+            "message": "Not interested comment.",
         }));
     }
 
-    match GithubEvent::new(&req) {
-        Ok(event) => match message::producer::produce_message_from(event) {
-            Ok(_) => {}
-            Err(e) => {
-                eprintln!("processing ocr event failed with: {}", e);
-                return Json(serde_json::json! ({
-                    "code": 0,
-                    "message": format!("Error: {}", e)
-                }));
-            }
-        },
+    let event = match github::event::GithubEvent::new(&req) {
+        Ok(event) => event,
         Err(e) => {
-            eprintln!(
-                "parsing eror for the github event: {} with error: {}",
-                req, e
-            );
+            eprintln!("Cannot process github message, error: {:?}", e);
             return Json(serde_json::json! ({
-                "code": 400,
-                "message": "Parsing github event failed comment.",
-            }));
+            "code": 0,
+            "message": "Cannot process github message"}));
         }
+    };
+    if let Err(e) = message::producer::produce_message_from(&event) {
+        eprintln!("Cannot process github message, error: {:?}", e);
+        tokio::spawn(async move {
+            let _ = github::issue::post_issue_comment(
+                &event.get_repo_name(),
+                event.get_pr_number(),
+                &format!("{}", e),
+            )
+            .await;
+        });
     }
 
     Json(serde_json::json! ({
         "code": 0,
-        "message": "Finish process github event.",
-    }))
+        "message": "Finish processing github event"}))
 }
