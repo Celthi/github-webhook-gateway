@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-gateway
+  labels:
+    product: webhook-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      product: webhook-gateway
+  template:
+    metadata:
+      labels:
+        product: webhook-gateway
+    spec:
+      containers:
+      - name: webhook-gateway
+        image: webhook-gateway:1.10
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 31430
+          name: liveness-port
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: liveness-port
+        env:   
+        - name: BACK_END_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: backend_host
+        - name: BACK_END_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: backend_port
+        - name: BACK_END_API_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: backend_api_token
+        - name: GITHUB_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: github_token
