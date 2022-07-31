@@ -2,6 +2,7 @@ use crate::backend_task;
 use crate::github::event::GithubEvent;
 use crate::message;
 use crate::queue;
+use crate::constants;
 use anyhow::Result;
 pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
     let action = event.get_action();
@@ -9,7 +10,7 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
         return Ok(());
     }
     let comment = event.get_comment();
-    if !comment.contains("KEYWORD") && !comment.contains("KEYWORD2") {
+    if !constants::contains_keywords_we_focus(&comment) {
         return Ok(());
     }
     match backend_task::get_backend_task_from_str(

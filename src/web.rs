@@ -1,3 +1,4 @@
+use crate::constants;
 use crate::github;
 
 use crate::message;
@@ -28,7 +29,7 @@ async fn health_check() {}
 
 #[handler]
 fn process_github_event_ep(req: String) -> Json<serde_json::Value> {
-    if !req.contains("KEYWORD") && !req.contains("KEYWORD2") {
+    if !constants::contains_keywords_we_focus(&req) {
         return Json(serde_json::json! ({
             "code": 0,
             "message": "Not interested comment.",

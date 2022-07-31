@@ -1,10 +1,11 @@
 use crate::config_env;
+use crate::constants;
 use crate::backend_task::Task;
 use anyhow::Result;
 use serde_json;
 pub async fn post_issue_comment(t: &Task, v: serde_json::Value) -> Result<()> {
     let comment_url = format!(
-        "https://api.github.com/repos/{}/issues/{}/comments",
+        constants::GITHUB_ISSUE_COMMENT_URL,
         t.RepoName, t.PR
     );
     let client = reqwest::Client::new();
