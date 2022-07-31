@@ -3,7 +3,12 @@ use webhook_gateway::message;
 use webhook_gateway::queue;
 use webhook_gateway::web;
 use std::thread;
+use tracing::{level_filters};
+
 fn main() {
+    let filter = level_filters::LevelFilter::INFO;
+
+    tracing_subscriber::fmt().with_max_level(filter).init();
     config_env::ensure_config();
     queue::init_channels();
     let mut v = vec![];

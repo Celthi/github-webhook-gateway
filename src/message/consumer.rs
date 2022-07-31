@@ -4,6 +4,8 @@ use crate::queue;
 use crate::backend_task::Task;
 use anyhow::Result;
 use tokio;
+use tracing::{info, error};
+
 #[tokio::main]
 pub async fn event_loop() {
     loop {
@@ -18,13 +20,13 @@ pub async fn event_loop() {
         }
         tokio::spawn(async move {
             if let Err(e) = sending_task(backend_task).await {
-                eprintln!("sending_tak failed, error: {}", e.to_string());
+                error!("sending_tak failed, error: {}", e.to_string());
             }
         });
     }
 }
 async fn sending_task(backend_task: Task) -> Result<()> {
-    println!("sending job: {:?}", serde_json::to_string(&backend_task));
+    info!("sending job: {:?}", serde_json::to_string(&backend_task));
     let client = reqwest::Client::new();
     let res = client
         .post(format!(
@@ -40,14 +42,14 @@ async fn sending_task(backend_task: Task) -> Result<()> {
     match res {
         Ok(body) => post_sending_task(body, &backend_task).await,
         Err(e) => {
-            println!("Failed sending job {:?}", e);
+            info!("Failed sending job {:?}", e);
             github::issue::post_issue_comment(&backend_task.RepoName, backend_task.PR, &e.to_string())
                 .await
         }
     }
 }
 async fn post_sending_task(body: reqwest::Response, backend_task: &Task) -> Result<()> {
-    println!("Succeed posting task {:?}", body);
+    info!("Succeed posting task {:?}", body);
     if body.status() != reqwest::StatusCode::OK {
         return Err(anyhow::anyhow!(format!(
             "Fail to send job with status code: {}.",

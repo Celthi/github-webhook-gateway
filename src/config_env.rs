@@ -2,6 +2,7 @@ use anyhow::{anyhow, Result};
 use once_cell::sync::OnceCell;
 use std::env;
 use std::process;
+use tracing::{info, error};
 #[derive(Debug)]
 pub struct ConfigEnv {
     pub backend_host: String,
@@ -80,16 +81,16 @@ pub fn ensure_config() {
     match ConfigEnv::new() {
         Ok(c) => {
             if let Err(e) = CONFIG.set(c) {
-                eprintln!("reading env variable failed: {:?}", e);
+                error!("reading env variable failed: {:?}", e);
             }
         }
 
         Err(e) => {
-            eprintln!("{}", e);
+            error!("{}", e);
             process::exit(1);
         }
     }
-    println!("{}", get_backend_host());
-    println!("{}", get_backend_port());
-    println!("{}", get_backend_api_token());
+    info!("{}", get_backend_host());
+    info!("{}", get_backend_port());
+    info!("{}", get_backend_api_token());
 }

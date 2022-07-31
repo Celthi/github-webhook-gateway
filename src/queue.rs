@@ -4,6 +4,7 @@ use std::process;
 use std::sync::mpsc;
 use std::sync::mpsc::{Receiver, Sender};
 use std::sync::{Arc, Mutex};
+use tracing::{ error};
 
 type ArcSender = Arc<Mutex<Sender<Message>>>;
 type ArcReceiver = Arc<Mutex<Receiver<Message>>>;
@@ -20,7 +21,7 @@ pub fn get_receiver() -> ArcReceiver {
 pub fn init_channels() {
     let (sender, receiver): (Sender<Message>, Receiver<Message>) = mpsc::channel();
     if let Err(e) = CHANNEL.set((Arc::new(Mutex::new(sender)), Arc::new(Mutex::new(receiver)))) {
-        eprintln!("init channels failed: {:?}", e);
+        error!("init channels failed: {:?}", e);
         process::exit(1);
     }
 }

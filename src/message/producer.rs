@@ -4,6 +4,8 @@ use crate::message;
 use crate::queue;
 use crate::constants;
 use anyhow::Result;
+use tracing::{info, error};
+
 pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
     let action = event.get_action();
     if action == "deleted" {
@@ -24,11 +26,11 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
             let guard = s.lock();
             let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
             if sender.send(message::Message { backend_task }).is_err() {
-                eprintln!("Fail to send a task to channel.");
+                error!("Fail to send a task to channel.");
             }
         }
         Err(e) => {
-            eprintln!("Cannot get backend task from body.{:?}", e);
+            error!("Cannot get backend task from body.{:?}", e);
         }
     }
     Ok(())

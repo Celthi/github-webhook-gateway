@@ -3,6 +3,7 @@ use crate::config_env;
 use anyhow::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
+use tracing::{info, error};
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct PostComment<'a> {
@@ -49,7 +50,7 @@ pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Res
         .await
     {
         Ok(_) => {
-            println!("{:?}", data);
+            info!("{:?}", data);
             Ok(())
         }
         Err(e) => Err(anyhow::anyhow!(format!("post comment failed {}", e))),

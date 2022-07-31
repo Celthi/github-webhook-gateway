@@ -1,5 +1,6 @@
 use crate::constants;
 use crate::github;
+use tracing::{debug, error, info, span, warn, Level};
 
 use crate::message;
 use anyhow::Result;
@@ -13,7 +14,6 @@ pub async fn event_loop() -> Result<(), std::io::Error> {
     if std::env::var_os("RUST_LOG").is_none() {
         std::env::set_var("RUST_LOG", "poem=debug");
     }
-    tracing_subscriber::fmt::init();
     let router = Route::new();
     let app = router
         .at("/healthz", health_check)
@@ -39,14 +39,14 @@ fn process_github_event_ep(req: String) -> Json<serde_json::Value> {
     let event = match github::event::GithubEvent::new(&req) {
         Ok(event) => event,
         Err(e) => {
-            eprintln!("Cannot process github message, error: {:?}", e);
+            error!("Cannot process github message, error: {:?}", e);
             return Json(serde_json::json! ({
             "code": 0,
             "message": "Cannot process github message"}));
         }
     };
     if let Err(e) = message::producer::produce_message_from(&event) {
-        eprintln!("Cannot process github message, error: {:?}", e);
+        error!("Cannot process github message, error: {:?}", e);
         tokio::spawn(async move {
             let _ = github::issue::post_issue_comment(
                 &event.get_repo_name(),
