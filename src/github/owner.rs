@@ -19,7 +19,7 @@ pub struct Owner {
     events_url: String,
     received_events_url: String,
     #[serde(rename = "type")]
-    _type: String,
+    r#type: String,
     site_admin: bool,
     ldap_dn: String,
 }
