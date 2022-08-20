@@ -2,7 +2,9 @@
 name = "webhook-gateway"
 version = "1.1.0"
 edition = "2021"
-
+license = "MIT OR Apache-2.0"
+description = "A service to structure your call traces (call stacks)"
+repository = "https://github.com/Celthi/github-webhook-gateway.git"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
