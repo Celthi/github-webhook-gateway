@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-config
+data:
+  # property-like keys; each key maps to a simple value
+  backend_api_token: "<>"
+  github_token: "<>"
+  kafka_broker_list: "<ip>:31433"
+  kafka_topic: ""
+  kafka_tp_topic: ""
+  xt_dock_link: ""

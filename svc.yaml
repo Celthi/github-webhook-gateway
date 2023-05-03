@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    product: webhook-gateway
+  name: webhook-gateway
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 31430
+    protocol: TCP
+    targetPort: 31430
+    nodePort: 31430
+
+  selector:
+    product: webhook-gateway
+  sessionAffinity: None
+  type: NodePort
+status:
+  loadBalancer: {}

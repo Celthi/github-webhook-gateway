@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhook-gateway
+  labels:
+    product: webhook-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      product: webhook-gateway
+  template:
+    metadata:
+      labels:
+        product: webhook-gateway
+    spec:
+      containers:
+      - name: webhook-gateway
+        image: webhook_gateway:2.7
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: BACKEND_API_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: BACKEND_api_token
+        - name: GITHUB_TOKEN
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config   
+              key: github_token
+        - name: KAFKA_BROKER_LIST
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: kafka_broker_list
+        - name: KAFKA_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: kafka_topic
+        - name: KAFKA_TP_TOPIC
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: kafka_tp_topic
+        - name: XT_DOC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: xt_dock_link

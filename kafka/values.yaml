@@ -1,0 +1,11 @@
+logPersistence:
+  enabled: true
+persistence:
+  enabled: true
+volumePermissions:
+  enabled: true
+zookeeper:
+  persistence:
+    enabled: true
+  volumePermissions:
+    enabled: true
