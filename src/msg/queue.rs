@@ -1,4 +1,4 @@
-use crate::channel::Message;
+use crate::msg::Message;
 use once_cell::sync::OnceCell;
 use std::process;
 use std::sync::mpsc;

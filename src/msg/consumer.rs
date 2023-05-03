@@ -1,10 +1,10 @@
 #[cfg(not(target_os = "windows"))]
 use super::kafka_dest;
-use crate::backend_task::BackendTask;
-use crate::channel::Message;
+use crate::msg::task::BackendTask;
+use crate::msg::Message;
 use crate::config_env;
 use crate::github;
-use crate::channel::queue;
+use crate::msg::queue;
 use anyhow::Result;
 use tokio;
 use tracing::info;

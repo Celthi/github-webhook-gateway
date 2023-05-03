@@ -1,6 +1,6 @@
 use webhook_gateway::config_env;
-use webhook_gateway::channel;
-use webhook_gateway::channel::queue;
+use webhook_gateway::msg;
+use webhook_gateway::msg::queue;
 use webhook_gateway::web;
 use std::thread;
 use tracing::{level_filters};
@@ -18,7 +18,7 @@ fn main() {
     });
     v.push(j);
     let j = thread::spawn(|| {
-        channel::consumer::event_loop();
+        msg::consumer::event_loop();
     });
     v.push(j);
     for t in v {

@@ -1691,7 +1691,7 @@ dependencies = [
 
 [[package]]
 name = "webhook-gateway"
-version = "2.19.8"
+version = "2.20.3"
 dependencies = [
  "anyhow",
  "colonbuilder",

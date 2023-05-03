@@ -6,7 +6,7 @@ use std::process;
 pub struct ConfigEnv {
     pub backend_host: Option<String>,
     pub backend_port: Option<String>,
-    pub backend_api_token:Option<String>,
+    pub backend_api_token: Option<String>,
     pub github_token: String,
     pub kafka_broker_list: String,
     pub kafka_topic: String,
@@ -41,7 +41,7 @@ impl ConfigEnv {
             time_spent_topic = Ok("time_spent".to_string());
         }
         let xt_doc_url = env::var("XT_DOC_URL").unwrap_or_else(|_| "".to_string());
-        
+
         Ok(ConfigEnv {
             backend_host: env::var("BACKEND_HOST").ok(),
             backend_port: env::var("BACKEND_PORT").ok(),
@@ -50,7 +50,7 @@ impl ConfigEnv {
             kafka_broker_list: kafka_broker_list.unwrap(),
             kafka_topic: kafka_topic.unwrap(),
             time_spent_topic: time_spent_topic.unwrap(),
-            xt_doc_url
+            xt_doc_url,
         })
     }
 }
@@ -59,7 +59,9 @@ pub static CONFIG: OnceCell<ConfigEnv> = OnceCell::new();
 
 pub fn is_backend_api_enable() -> bool {
     let config = CONFIG.get().expect("fail to get env variable");
-    config.backend_host.is_some() && config.backend_port.is_some() && !config.backend_api_token.is_some()
+    config.backend_host.is_some()
+        && config.backend_port.is_some()
+        && !config.backend_api_token.is_some()
 }
 pub fn get_backend_host() -> &'static str {
     CONFIG

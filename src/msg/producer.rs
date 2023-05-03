@@ -1,10 +1,9 @@
-use crate::channel;
+use crate::msg;
 use crate::constants;
 use crate::rally;
 use crate::github::event::GithubEvent;
-use crate::channel::queue;
-use crate::time_spent;
-use crate::backend_task;
+use crate::msg::queue;
+use crate::msg::time_spent;
 use anyhow::Result;
 
 pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
@@ -20,7 +19,7 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
         if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
             // somehow submit a review will create two events: edited and submitted, only care the 'submitted' event only.
             if let Some(tp) = time_spent::get_time_spent_from_str(comment, event) {
-                msg = channel::Message::TimeSpent(tp);
+                msg = msg::Message::TimeSpent(tp);
                 let s = queue::get_sender();
                 let guard = s.lock();
                 let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
@@ -29,13 +28,13 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
         }
         if constants::contains_ocr_patten(comment) {
             if let (Some(repo), Some(pr)) = (event.get_repo_name(), event.get_pr_number()) {
-                let task = backend_task::get_backend_task_from_str(
+                let task = msg::task::get_backend_task_from_str(
                     comment,
                     repo.to_string(),
                     pr,
                     event.get_user_name(),
                 )?;
-                msg = channel::Message::BackendTask(task);
+                msg = msg::Message::BackendTask(task);
                 let s = queue::get_sender();
                 let guard = s.lock();
                 let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
@@ -53,7 +52,7 @@ pub fn produce_msg_from(event: &rally::Event) -> Result<()> {
             return Ok(());
         }
         if let Some(tp) = time_spent::get_time_spent_from_rally_str(comment, event) {
-            let msg = channel::Message::TimeSpent(tp);
+            let msg = msg::Message::TimeSpent(tp);
             let s = queue::get_sender();
             let guard = s.lock();
             let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
