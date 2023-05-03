@@ -1,0 +1,139 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in library 'webhook-gateway'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--lib",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "webhook-gateway",
+                    "kind": "lib"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'webhook_gateway'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=webhook_gateway",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "webhook_gateway",
+                    "kind": "bin"
+                }
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'webhook_gateway'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=webhook_gateway",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "webhook_gateway",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'kc'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=kc",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "kc",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'kc'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=kc",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "kc",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'kp'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=kp",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "kp",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'kp'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=kp",
+                    "--package=webhook-gateway"
+                ],
+                "filter": {
+                    "name": "kp",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -5,10 +5,9 @@ pub mod backend_task;
 extern crate colonbuilder;
 pub mod constants;
 pub mod channel;
-pub mod queue;
 pub mod web;
 pub mod time_spent;
-pub mod event;
+pub mod rally;
 macro_rules! reg {
     ($re:literal $(,)?) => {{
         static RE: once_cell::sync::OnceCell<regex::Regex> = once_cell::sync::OnceCell::new();

@@ -4,7 +4,7 @@ pub mod consumer;
 #[cfg(not(target_os = "windows"))]
 pub mod kafka_dest;
 pub mod producer;
-
+pub mod queue;
 pub enum Message {
     BackendTask(BackendTask),
     TimeSpent(TimeSpent),

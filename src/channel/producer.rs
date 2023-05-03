@@ -1,8 +1,8 @@
 use crate::channel;
 use crate::constants;
-use crate::event;
+use crate::rally;
 use crate::github::event::GithubEvent;
-use crate::queue;
+use crate::channel::queue;
 use crate::time_spent;
 use crate::backend_task;
 use anyhow::Result;
@@ -47,7 +47,7 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
     Ok(())
 }
 
-pub fn produce_msg_from(event: &event::rally::Event) -> Result<()> {
+pub fn produce_msg_from(event: &rally::Event) -> Result<()> {
     if let Some(comment) = event.get_code() {
         if !constants::contains_time_spent_pattern(comment) {
             return Ok(());

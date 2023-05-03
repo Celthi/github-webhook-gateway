@@ -4,7 +4,7 @@ use crate::backend_task::BackendTask;
 use crate::channel::Message;
 use crate::config_env;
 use crate::github;
-use crate::queue;
+use crate::channel::queue;
 use anyhow::Result;
 use tokio;
 use tracing::info;

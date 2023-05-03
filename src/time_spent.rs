@@ -1,5 +1,5 @@
 use crate::github::event::GithubEvent;
-use crate::{event, reg};
+use crate::{rally, reg};
 use rand;
 use serde::{Deserialize, Serialize};
 
@@ -49,7 +49,7 @@ pub fn get_time_spent_from_str(s: &str, event: &GithubEvent) -> Option<TimeSpent
         })
 }
 
-pub fn get_time_spent_from_rally_str(s: &str, event: &event::rally::Event) -> Option<TimeSpent> {
+pub fn get_time_spent_from_rally_str(s: &str, event: &rally::Event) -> Option<TimeSpent> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
     let user = event.get_user_name();
     let k = rand::random::<u64>();

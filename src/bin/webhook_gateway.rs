@@ -1,6 +1,6 @@
 use webhook_gateway::config_env;
 use webhook_gateway::channel;
-use webhook_gateway::queue;
+use webhook_gateway::channel::queue;
 use webhook_gateway::web;
 use std::thread;
 use tracing::{level_filters};

@@ -1,6 +1,6 @@
 use crate::channel;
 use crate::constants;
-use crate::event;
+use crate::rally;
 use crate::github;
 use anyhow::Result;
 use poem::{
@@ -33,7 +33,7 @@ async fn health_check() {}
 #[handler]
 fn process_rally_event_ep(req: String) -> Json<serde_json::Value> {
     if constants::contains_rally_pattern(&req) {
-        match event::rally::Event::new(&req) {
+        match rally::Event::new(&req) {
             Ok(e) => {
                 if let Err(e) = channel::producer::produce_msg_from(&e) {
                     error!("Cannot process rally message, error: {}{:?}", req, e);
