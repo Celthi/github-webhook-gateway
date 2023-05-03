@@ -2,6 +2,7 @@ use anyhow::{anyhow, Result};
 use once_cell::sync::OnceCell;
 use std::env;
 use std::process;
+
 #[derive(Debug)]
 pub struct ConfigEnv {
     pub backend_host: Option<String>,

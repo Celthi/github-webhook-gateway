@@ -1,9 +1,8 @@
-use crate::msg::Message;
+use super::time_spent;
 use crate::msg::queue;
 use crate::msg::task;
+use crate::msg::Message;
 use tokio;
-
-use super::time_spent;
 
 #[tokio::main]
 pub async fn event_loop() {
@@ -24,4 +23,3 @@ pub async fn event_loop() {
         }
     }
 }
-

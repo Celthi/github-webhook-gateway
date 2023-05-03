@@ -56,7 +56,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
             login: event.get_login_name().to_string(),
             value: n.as_str().parse().unwrap(),
             id: k,
-            wp_formatted_id: Some(wp.to_string()),
+            wp_formatted_id: Some(wp),
             repo_name: event.get_repo_name().map(|s| s.to_string()),
             pr_number: event.get_pr_number(),
             task_name,

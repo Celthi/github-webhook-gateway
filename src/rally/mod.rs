@@ -1,6 +1,7 @@
+use crate::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
-use crate::msg::time_spent::TimeSpentTrait;
+
 #[derive(Serialize, Deserialize)]
 pub struct Event {
     message: Message,
@@ -10,17 +11,18 @@ pub struct Event {
 pub struct Transaction {
     user: User,
 }
+
 #[derive(Serialize, Deserialize)]
 pub struct User {
     username: String,
 }
+
 impl Event {
     pub fn new(payload: &str) -> Result<Self> {
         let res: Self = serde_json::from_str(payload)?;
         Ok(res)
     }
 }
-
 
 impl TimeSpentTrait for Event {
     fn get_repo_name(&self) -> Option<&str> {

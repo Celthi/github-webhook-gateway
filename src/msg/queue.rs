@@ -8,12 +8,12 @@ use tracing::error;
 
 type ArcSender = Arc<Mutex<Sender<Message>>>;
 type ArcReceiver = Arc<Mutex<Receiver<Message>>>;
-
 static CHANNEL: OnceCell<(ArcSender, ArcReceiver)> = OnceCell::new();
 
 pub fn get_sender() -> ArcSender {
     CHANNEL.get().expect("cannot get sender").0.clone()
 }
+
 pub fn get_receiver() -> ArcReceiver {
     CHANNEL.get().expect("cannot get receiver.").1.clone()
 }
