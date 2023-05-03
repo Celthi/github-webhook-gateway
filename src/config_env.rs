@@ -61,7 +61,7 @@ pub fn is_backend_api_enable() -> bool {
     let config = CONFIG.get().expect("fail to get env variable");
     config.backend_host.is_some()
         && config.backend_port.is_some()
-        && !config.backend_api_token.is_some()
+        && config.backend_api_token.is_none()
 }
 pub fn get_backend_host() -> &'static str {
     CONFIG

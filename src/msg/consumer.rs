@@ -31,14 +31,12 @@ pub async fn event_loop() {
                         )
                         .await;
                     });
-                } else {
-                    if let (Some(repo), Some(pr)) =
-                        (tp.get_repo().map(str::to_string), tp.get_pr_number())
-                    {
-                        tokio::spawn(async move {
-                            let _ = github::post_issue_comment(&repo, pr, "Time And Task: not a valid time spent, please make sure your PR title to follow the guideline.").await;
-                        });
-                    }
+                } else if let (Some(repo), Some(pr)) =
+                    (tp.get_repo().map(str::to_string), tp.get_pr_number())
+                {
+                    tokio::spawn(async move {
+                        let _ = github::post_issue_comment(&repo, pr, "Time And Task: not a valid time spent, please make sure your PR title to follow the guideline.").await;
+                    });
                 }
             }
             Message::BackendTask(backend_task) => {
