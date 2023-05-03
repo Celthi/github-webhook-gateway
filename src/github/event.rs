@@ -4,7 +4,7 @@ use super::pull_request::PullRequest;
 use super::repo::Repository;
 use super::review::Review;
 use super::sender::Sender;
-use crate::msg::time_spent::TimeSpentTrait;
+use crate::handler::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 #[derive(Deserialize, Serialize)]

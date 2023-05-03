@@ -13,7 +13,7 @@ extern crate colonbuilder;
 pub mod constants;
 #[cfg(not(target_os = "windows"))]
 pub mod kafka;
-pub mod msg;
+pub mod handler;
 pub mod rally;
 pub mod web;
 

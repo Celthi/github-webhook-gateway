@@ -1,4 +1,4 @@
-use crate::msg::time_spent::TimeSpentTrait;
+use crate::handler::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
