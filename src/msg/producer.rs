@@ -34,7 +34,7 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
                     pr,
                     event.get_user_name(),
                 )?;
-                msg = msg::Message::BackendTask(task);
+                msg = msg::Message::Task(task);
                 let s = queue::get_sender();
                 let guard = s.lock();
                 let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc

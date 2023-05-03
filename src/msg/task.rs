@@ -1,6 +1,8 @@
 use crate::config_env;
-use anyhow::{anyhow, Ok, Result};
+use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
+use tracing::info;
+use crate::github;
 
 macro_rules! reg {
     ($re:literal $(,)?) => {{
@@ -40,7 +42,7 @@ struct OCRBody {
 
 #[allow(non_snake_case)]
 #[derive(Deserialize, Serialize, Default, Clone)]
-pub struct BackendTask {
+pub struct Task {
     APIToken: Option<String>,
     pub PR: u64,
     pub RepoName: String,
@@ -49,7 +51,7 @@ pub struct BackendTask {
     body: OCRBody,
 }
 
-impl BackendTask {
+impl Task {
     pub fn get_build_number(&self) -> &str {
         &self.body.BuildNo
     }
@@ -60,7 +62,7 @@ pub fn get_backend_task_from_str(
     repo: String,
     pr_number: u64,
     member: String,
-) -> Result<BackendTask> {
+) -> Result<Task> {
     let ocr_body = OCRBody::from_str(s);
     if ocr_body.BuildNo.is_empty() {
         return Err(anyhow!(format!(
@@ -69,7 +71,7 @@ pub fn get_backend_task_from_str(
         )));
     }
 
-    Ok(BackendTask {
+    Ok(Task {
         APIToken: config_env::get_backend_api_token(),
         PR: pr_number,
         Member: member,
@@ -77,6 +79,58 @@ pub fn get_backend_task_from_str(
         RepoName: repo,
     })
 }
+
+pub async fn sending_task(task: Task) -> Result<()> {
+    info!("sending job: {:?}", serde_json::to_string(&task));
+    let client = reqwest::Client::new();
+    let res = client
+        .post(format!(
+            "http://{}:{}/api/abavalidation",
+            config_env::get_backend_host(),
+            config_env::get_backend_port()
+        ))
+        .header("Authorization", config_env::get_backend_api_token().unwrap())
+        .header("Accept", "application/json")
+        .json(&task)
+        .send()
+        .await;
+    match res {
+        Ok(body) => post_sending_task(body, &task).await,
+        Err(e) => {
+            info!("Failed sending job {:?}", e);
+            github::post_issue_comment(&task.RepoName, task.PR, &e.to_string())
+                .await
+        }
+    }
+}
+
+async fn post_sending_task(body: reqwest::Response, task: &Task) -> Result<()> {
+    info!("Succeed posting task {:?}", body);
+    if body.status() != reqwest::StatusCode::OK {
+        return Err(anyhow::anyhow!(format!(
+            "Fail to send job with status code: {}.",
+            body.status()
+        )));
+    }
+    let result = body.json::<serde_json::Value>().await?;
+    let code = result
+        .get("code")
+        .ok_or_else(|| anyhow::anyhow!("no code in it"))?;
+    let code = code
+        .as_u64()
+        .ok_or_else(|| anyhow::anyhow!("code is not u64"))?;
+    if code < 400 {
+        return Ok(());
+    }
+    let error_message = format!(
+        "\r\n{err}\r\nPlease read more details on doc: {doc}",
+        err = result,
+        doc = config_env::xt_doc_url()
+    );
+
+    github::post_issue_comment(&task.RepoName, task.PR, &error_message).await
+}
+
 
 #[cfg(test)]
 mod test {
