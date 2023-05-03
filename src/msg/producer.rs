@@ -1,12 +1,13 @@
-use crate::msg;
 use crate::constants;
-use crate::rally;
 use crate::github::event::GithubEvent;
+use crate::msg;
 use crate::msg::queue;
 use crate::msg::time_spent;
 use anyhow::Result;
 
-pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
+use super::time_spent::TimeSpentTrait;
+
+pub fn handle_github_message(event: &GithubEvent) -> Result<()> {
     let action = event.get_action();
     if action == "deleted" {
         return Ok(());
@@ -18,7 +19,7 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
         let mut msg;
         if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
             // somehow submit a review will create two events: edited and submitted, only care the 'submitted' event only.
-            if let Some(tp) = time_spent::get_time_spent_from_str(comment, event) {
+            if let Some(tp) = time_spent::get_time_spent(comment, event, None) {
                 msg = msg::Message::TimeSpent(tp);
                 let s = queue::get_sender();
                 let guard = s.lock();
@@ -46,12 +47,12 @@ pub fn produce_message_from(event: &GithubEvent) -> Result<()> {
     Ok(())
 }
 
-pub fn produce_msg_from(event: &rally::Event) -> Result<()> {
+pub fn handle_rally_message<T: TimeSpentTrait>(event: &T, task_name: Option<String>) -> Result<()> {
     if let Some(comment) = event.get_code() {
         if !constants::contains_time_spent_pattern(comment) {
             return Ok(());
         }
-        if let Some(tp) = time_spent::get_time_spent_from_rally_str(comment, event) {
+        if let Some(tp) = time_spent::get_time_spent(comment, event, task_name) {
             let msg = msg::Message::TimeSpent(tp);
             let s = queue::get_sender();
             let guard = s.lock();

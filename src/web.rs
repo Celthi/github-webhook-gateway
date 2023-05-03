@@ -3,6 +3,7 @@ use crate::github;
 use crate::msg;
 use crate::rally;
 use anyhow::Result;
+use crate::msg::time_spent::TimeSpentTrait;
 use poem::{
     handler, listener::TcpListener, middleware::Tracing, post, web::Json, EndpointExt, Route,
     Server,
@@ -34,7 +35,7 @@ fn process_rally_event_ep(req: String) -> Json<serde_json::Value> {
     if constants::contains_rally_pattern(&req) {
         match rally::Event::new(&req) {
             Ok(e) => {
-                if let Err(e) = msg::producer::produce_msg_from(&e) {
+                if let Err(e) = msg::producer::handle_rally_message(&e, Some("Review and Support".to_string())) {
                     error!("Cannot process rally message, error: {}{:?}", req, e);
                     return Json(serde_json::json! ({
                     "code": 0,
@@ -71,7 +72,7 @@ fn process_github_event_ep(req: String) -> Json<serde_json::Value> {
             "message": "Cannot process github message"}));
         }
     };
-    if let Err(e) = msg::producer::produce_message_from(&event) {
+    if let Err(e) = msg::producer::handle_github_message(&event) {
         error!("Cannot process github message, error: {:?}", e);
         if let (Some(repo), Some(pr)) = (
             event.get_repo_name().map(str::to_string),
