@@ -47,15 +47,13 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     task_name: Option<String>,
 ) -> Option<TimeSpent> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
-    let user = event.get_user_name();
-    let k = rand::random::<u64>();
     let wp = event.get_work_product();
     pat.captures(s).and_then(|m| m.name("t")).and_then(|n| {
         wp.map(|wp| TimeSpent {
-            user,
+            user: event.get_user_name(),
             login: event.get_login_name().to_string(),
-            value: n.as_str().parse().unwrap(),
-            id: k,
+            value: n.as_str().parse().unwrap_or(1.0),
+            id: rand::random::<u64>(),
             wp_formatted_id: Some(wp),
             repo_name: event.get_repo_name().map(|s| s.to_string()),
             pr_number: event.get_pr_number(),

@@ -1,5 +1,5 @@
 use crate::config_env;
-use anyhow::{anyhow, Result};
+use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use tracing::info;
 use crate::github;
@@ -59,10 +59,10 @@ pub fn get_task_from_str(
 ) -> Result<Task> {
     let ocr_body = OCRBody::from_str(s);
     if ocr_body.BuildNo.is_empty() {
-        return Err(anyhow!(format!(
+        bail!(format!(
             "\r\n Build number is required.\r\n Please read the {doc}",
             doc = config_env::xt_doc_url()
-        )));
+        ));
     }
 
     Ok(Task {
