@@ -13,9 +13,6 @@ pub fn handle_github_message(event: &GithubEvent) -> Result<()> {
         return Ok(());
     }
     if let Some(comment) = event.get_code() {
-        if !constants::contain_keywords(comment) {
-            return Ok(());
-        }
         let mut msg;
         if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
             // somehow submit a review will create two events: edited and submitted, only care the 'submitted' event only.
@@ -29,7 +26,7 @@ pub fn handle_github_message(event: &GithubEvent) -> Result<()> {
         }
         if constants::contains_ocr_patten(comment) {
             if let (Some(repo), Some(pr)) = (event.get_repo_name(), event.get_pr_number()) {
-                let task = msg::task::get_backend_task_from_str(
+                let task = msg::task::get_task_from_str(
                     comment,
                     repo.to_string(),
                     pr,

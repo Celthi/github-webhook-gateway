@@ -80,7 +80,7 @@ pub async fn handle_task(task: Task) {
 }
 
 
-pub fn get_backend_task_from_str(
+pub fn get_task_from_str(
     s: &str,
     repo: String,
     pr_number: u64,
@@ -168,12 +168,12 @@ mod test {
 
         let s = r#"BN: 11.03.0064.0015
         name_abr"#;
-        let t = get_backend_task_from_str(s, "Tech/Server".to_string(), 12, "name_abr".to_string());
+        let t = get_task_from_str(s, "Tech/Server".to_string(), 12, "name_abr".to_string());
 
         assert_eq!(t.unwrap().get_build_number(), "11.03.0064.0015");
 
         let s = "BN: 11.03.0064.0015\r\n";
-        let t = get_backend_task_from_str(s, "Tech/Server".to_string(), 12, "name_abr".to_string());
+        let t = get_task_from_str(s, "Tech/Server".to_string(), 12, "name_abr".to_string());
         assert_eq!(t.unwrap().get_build_number(), "11.03.0064.0015");
     }
     #[test]
@@ -185,22 +185,22 @@ mod test {
 
         config_env::ensure_config();
 
-        use super::get_backend_task_from_str;
+        use super::get_task_from_str;
         let s = r#"BN: 11.03.0064.0015
         "#;
-        let t = get_backend_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
+        let t = get_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
         assert_eq!(t.unwrap().get_build_number(), "11.03.0064.0015");
         let s = r#"BN: 11.03.0064.0015"#;
-        let t = get_backend_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
+        let t = get_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
         assert_eq!(t.unwrap().get_build_number(), "11.03.0064.0015");
         let s = r#"BN: 11.03.0064.0015\r\nTC:Object"#;
-        let t = get_backend_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
+        let t = get_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
         assert_eq!(
             t.unwrap().body.TouchedComponents,
             vec!["Object".to_string()]
         );
         let s = r#"BN: 11.03.0064.0015\r\nTouchedComponents:Object"#;
-        let t = get_backend_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
+        let t = get_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
         assert_eq!(
             t.unwrap().body.TouchedComponents,
             vec!["Object".to_string()]
@@ -209,7 +209,7 @@ mod test {
         SB:xt-tt-11.3.1000.0125_installation_branch
         BN: 11.3.1000.0125
         TestType:Regression"#;
-        let t = get_backend_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
+        let t = get_task_from_str(s, "ro".to_string(), 121, "mt".to_owned());
         assert_eq!(t.as_ref().unwrap().get_build_number(), "11.3.1000.0125");
 
         assert_eq!(t.as_ref().unwrap().body.TestType, "Regression".to_string());
