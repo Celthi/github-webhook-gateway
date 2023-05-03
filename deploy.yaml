@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
       - name: webhook-gateway
-        image: webhook_gateway:2.7
+        image: webhook_gateway:2.20.2
         imagePullPolicy: IfNotPresent
         env:
         - name: BACKEND_API_TOKEN
           valueFrom:
             configMapKeyRef:
               name: backend-config   
-              key: BACKEND_api_token
+              key: backend_api_token
         - name: GITHUB_TOKEN
           valueFrom:
             configMapKeyRef:
@@ -39,11 +39,6 @@ spec:
             configMapKeyRef:
               name: backend-config
               key: kafka_topic
-        - name: KAFKA_TP_TOPIC
-          valueFrom:
-            configMapKeyRef:
-              name: backend-config
-              key: kafka_tp_topic
         - name: XT_DOC_URL
           valueFrom:
             configMapKeyRef:
