@@ -1,5 +1,4 @@
 pub mod config_env;
-pub mod github;
 macro_rules! reg {
     ($re:literal $(,)?) => {{
         static RE: once_cell::sync::OnceCell<regex::Regex> = once_cell::sync::OnceCell::new();
@@ -13,7 +12,6 @@ extern crate colonbuilder;
 pub mod constants;
 #[cfg(not(target_os = "windows"))]
 pub mod kafka;
-pub mod handler;
-pub mod rally;
+pub mod events;
 pub mod web;
 

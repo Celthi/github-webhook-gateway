@@ -1,7 +1,7 @@
 use super::time_spent;
-use crate::handler::queue;
-use crate::handler::msg::task;
-use crate::handler::msg::Message;
+use crate::events::msg::queue;
+use crate::events::msg::task;
+use crate::events::msg::Message;
 use tokio;
 
 #[tokio::main]

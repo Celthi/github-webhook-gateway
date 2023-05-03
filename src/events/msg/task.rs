@@ -2,7 +2,7 @@ use crate::config_env;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use tracing::info;
-use crate::github;
+use crate::events::github;
 use crate::kafka;
 
 #[allow(non_snake_case)]

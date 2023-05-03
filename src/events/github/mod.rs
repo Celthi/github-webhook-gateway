@@ -7,6 +7,7 @@ mod pull_request;
 mod review;
 pub mod event;
 mod sender;
+pub mod handler;
 use crate::reg;
 use crate::config_env;
 use serde::{Deserialize, Serialize};

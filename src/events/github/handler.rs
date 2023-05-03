@@ -1,9 +1,9 @@
 use crate::constants;
-use crate::github::event::GithubEvent;
-use crate::handler;
-use crate::handler::msg::time_spent;
-use crate::handler::msg::time_spent::TimeSpentTrait;
-use crate::handler::queue;
+use crate::events::github::event::GithubEvent;
+use crate::events;
+use crate::events::msg::time_spent;
+use crate::events::msg::time_spent::TimeSpentTrait;
+use crate::events::msg::queue;
 use anyhow::Result;
 
 pub fn handle_github_event(event: &GithubEvent) -> Result<()> {
@@ -25,13 +25,13 @@ pub fn handle_github_event(event: &GithubEvent) -> Result<()> {
 
 fn handle_ocr_event(event: &GithubEvent, comment: &str) -> Result<(), anyhow::Error> {
     if let (Some(repo), Some(pr)) = (event.get_repo_name(), event.get_pr_number()) {
-        let task = handler::msg::task::get_task_from_str(
+        let task = events::msg::task::get_task_from_str(
             comment,
             repo.to_string(),
             pr,
             event.get_user_name(),
         )?;
-        let msg = handler::msg::Message::Task(task);
+        let msg = events::msg::Message::Task(task);
         let s = queue::get_sender();
         let guard = s.lock();
         let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
@@ -42,7 +42,7 @@ fn handle_ocr_event(event: &GithubEvent, comment: &str) -> Result<(), anyhow::Er
 
 fn handle_time_spent_event(comment: &str, event: &GithubEvent) -> Result<()> {
     if let Some(tp) = time_spent::get_time_spent(comment, event, None) {
-        let msg = handler::msg::Message::TimeSpent(tp);
+        let msg = events::msg::Message::TimeSpent(tp);
         let s = queue::get_sender();
         let guard = s.lock();
         let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc

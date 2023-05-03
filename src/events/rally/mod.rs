@@ -1,4 +1,5 @@
-use crate::handler::msg::time_spent::TimeSpentTrait;
+pub mod handler;
+use crate::events::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 

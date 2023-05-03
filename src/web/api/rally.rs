@@ -1,6 +1,5 @@
 use crate::constants;
-use crate::handler;
-use crate::rally;
+use crate::events::rally;
 use poem::{handler, web::Json};
 use serde_json;
 use tracing::error;
@@ -16,7 +15,7 @@ pub fn process(req: String) -> Json<serde_json::Value> {
     match rally::Event::new(&req) {
         Ok(e) => {
             if let Err(e) =
-                handler::rally::handle_rally_event(&e, Some("Review and Support".to_string()))
+                rally::handler::handle_rally_event(&e, Some("Review and Support".to_string()))
             {
                 error!("Cannot handle rally message, error: {}{:?}", req, e);
                 return Json(serde_json::json! ({

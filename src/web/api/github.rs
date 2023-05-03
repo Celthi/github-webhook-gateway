@@ -1,8 +1,8 @@
 use crate::constants;
-use crate::github;
-use crate::handler;
+use crate::events::github;
+use crate::events;
 
-use crate::handler::msg::time_spent::TimeSpentTrait;
+use crate::events::msg::time_spent::TimeSpentTrait;
 use poem::{handler, web::Json};
 use serde_json;
 use tracing::error;
@@ -28,7 +28,7 @@ pub fn process(req: String) -> Json<serde_json::Value> {
             "message": "Cannot process github message"}));
         }
     };
-    if let Err(e) = handler::github::handle_github_event(&event) {
+    if let Err(e) = events::github::handler::handle_github_event(&event) {
         error!("Cannot process github message, error: {:?}", e);
         if let (Some(repo), Some(pr)) = (
             event.get_repo_name().map(str::to_string),

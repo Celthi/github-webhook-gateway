@@ -1,5 +1,5 @@
 use crate::config_env;
-use crate::github;
+use crate::events::github;
 use crate::kafka;
 use crate::reg;
 use rand;
