@@ -3,7 +3,7 @@ use anyhow::{anyhow, Result};
 use serde::{Deserialize, Serialize};
 use tracing::info;
 use crate::github;
-
+use crate::kafka;
 macro_rules! reg {
     ($re:literal $(,)?) => {{
         static RE: once_cell::sync::OnceCell<regex::Regex> = once_cell::sync::OnceCell::new();
@@ -57,6 +57,29 @@ impl Task {
     }
 }
 
+
+pub async fn handle_task(task: Task) {
+    let task2 = task.clone();
+    tokio::spawn(async move {
+        kafka::produce(
+            config_env::get_kafka_broker_list(),
+            config_env::get_kafka_topic(),
+            &serde_json::to_vec(&task).unwrap(),
+            task.PR,
+        )
+        .await;
+    });
+    if config_env::is_backend_api_enable() {
+        info!("Beginning sending task...");
+        tokio::spawn(async move {
+            if let Err(e) = sending_task(task2).await {
+                eprintln!("sending_tak failed, error: {}", e);
+            }
+        });
+    }
+}
+
+
 pub fn get_backend_task_from_str(
     s: &str,
     repo: String,
@@ -80,7 +103,7 @@ pub fn get_backend_task_from_str(
     })
 }
 
-pub async fn sending_task(task: Task) -> Result<()> {
+async fn sending_task(task: Task) -> Result<()> {
     info!("sending job: {:?}", serde_json::to_string(&task));
     let client = reqwest::Client::new();
     let res = client

@@ -2,6 +2,10 @@ use crate::github::event::GithubEvent;
 use crate::{rally, reg};
 use rand;
 use serde::{Deserialize, Serialize};
+use crate::kafka;
+use crate::config_env;
+use crate::github;
+use tracing::info;
 
 #[derive(Deserialize, Serialize, Default, Clone)]
 pub struct TimeSpent {
@@ -67,4 +71,26 @@ pub fn get_time_spent_from_rally_str(s: &str, event: &rally::Event) -> Option<Ti
             task_name: Some("Review and Suggestion.".to_string()),
         })
     })
+}
+
+
+pub async fn handle_time_spent(tp: TimeSpent) {
+    info!("Beginning sending time spent...");
+    if tp.is_valid() {
+        tokio::spawn(async move {
+            kafka::produce(
+                config_env::get_kafka_broker_list(),
+                config_env::get_kafka_time_spent_topic(),
+                &serde_json::to_vec(&tp).unwrap(),
+                tp.get_id(),
+            )
+            .await;
+        });
+    } else if let (Some(repo), Some(pr)) =
+        (tp.get_repo().map(str::to_string), tp.get_pr_number())
+    {
+        tokio::spawn(async move {
+            let _ = github::post_issue_comment(&repo, pr, "Time And Task: not a valid time spent, please make sure your PR title to follow the guideline.").await;
+        });
+    }
 }
