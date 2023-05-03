@@ -4,12 +4,6 @@ use serde::{Deserialize, Serialize};
 use tracing::info;
 use crate::github;
 use crate::kafka;
-macro_rules! reg {
-    ($re:literal $(,)?) => {{
-        static RE: once_cell::sync::OnceCell<regex::Regex> = once_cell::sync::OnceCell::new();
-        RE.get_or_init(|| regex::Regex::new($re).unwrap())
-    }};
-}
 
 #[allow(non_snake_case)]
 #[derive(Deserialize, Serialize, Default, ColonBuilder, Clone)]
@@ -57,29 +51,6 @@ impl Task {
     }
 }
 
-
-pub async fn handle_task(task: Task) {
-    let task2 = task.clone();
-    tokio::spawn(async move {
-        kafka::produce(
-            config_env::get_kafka_broker_list(),
-            config_env::get_kafka_topic(),
-            &serde_json::to_vec(&task).unwrap(),
-            task.PR,
-        )
-        .await;
-    });
-    if config_env::is_backend_api_enable() {
-        info!("Beginning sending task...");
-        tokio::spawn(async move {
-            if let Err(e) = sending_task(task2).await {
-                eprintln!("sending_tak failed, error: {}", e);
-            }
-        });
-    }
-}
-
-
 pub fn get_task_from_str(
     s: &str,
     repo: String,
@@ -101,6 +72,28 @@ pub fn get_task_from_str(
         body: ocr_body,
         RepoName: repo,
     })
+}
+
+pub async fn handle_task(task: Task) {
+    let task2 = task.clone();
+    tokio::spawn(async move {
+        kafka::produce(
+            config_env::get_kafka_broker_list(),
+            config_env::get_kafka_topic(),
+            &serde_json::to_vec(&task).unwrap(),
+            task.PR,
+        )
+        .await;
+    });
+    
+    if config_env::is_backend_api_enable() {
+        info!("Beginning sending task...");
+        tokio::spawn(async move {
+            if let Err(e) = sending_task(task2).await {
+                eprintln!("sending_tak failed, error: {}", e);
+            }
+        });
+    }
 }
 
 async fn sending_task(task: Task) -> Result<()> {
@@ -150,7 +143,6 @@ async fn post_sending_task(body: reqwest::Response, task: &Task) -> Result<()> {
         err = result,
         doc = config_env::xt_doc_url()
     );
-
     github::post_issue_comment(&task.RepoName, task.PR, &error_message).await
 }
 
