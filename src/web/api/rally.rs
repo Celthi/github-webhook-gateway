@@ -10,7 +10,7 @@ pub fn process(req: String) -> Json<serde_json::Value> {
         match rally::Event::new(&req) {
             Ok(e) => {
                 if let Err(e) =
-                    msg::producer::handle_rally_message(&e, Some("Review and Support".to_string()))
+                    msg::rally::handle_rally_message(&e, Some("Review and Support".to_string()))
                 {
                     error!("Cannot process rally message, error: {}{:?}", req, e);
                     return Json(serde_json::json! ({

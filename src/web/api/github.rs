@@ -28,7 +28,7 @@ pub fn process(req: String) -> Json<serde_json::Value> {
             "message": "Cannot process github message"}));
         }
     };
-    if let Err(e) = msg::producer::handle_github_message(&event) {
+    if let Err(e) = msg::github::handle_github_message(&event) {
         error!("Cannot process github message, error: {:?}", e);
         if let (Some(repo), Some(pr)) = (
             event.get_repo_name().map(str::to_string),
