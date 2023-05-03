@@ -21,7 +21,6 @@ impl TimeSpentTrait for GithubEvent {
     fn get_repo_name(&self) -> Option<&str> {
         Some(self.repository.get_full_name())
     }
-
     fn get_pr_number(&self) -> Option<u64> {
         if self.pull_request.is_some() {
             return self.pull_request.as_ref().map(|p| p.get_number());
@@ -34,8 +33,11 @@ impl TimeSpentTrait for GithubEvent {
         }
         None
     }
+
     fn get_user_name(&self) -> String {
-        self.sender.get_sender_name().unwrap_or_else(||"ocr_default".to_string())        
+        self.sender
+            .get_sender_name()
+            .unwrap_or_else(|| "ocr_default".to_string())
     }
 
     fn get_work_product(&self) -> Option<String> {
