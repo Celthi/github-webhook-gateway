@@ -29,14 +29,14 @@ pub fn process(req: String) -> Json<serde_json::Value> {
         }
     };
     tokio::spawn(async move {
-        let name = match github::get_user_name(event.get_login_name()).await {
-            Ok(n) => Some(n),
+        let user = match github::get_user_name(event.get_login_name()).await {
+            Ok(n) => n,
             Err(e) => {
                 error!("get user name error:{}", e);
-                None
+                return;
             }
         };
-        if let Err(e) = events::github::handler::handle_github_event(&event, name) {
+        if let Err(e) = events::github::handler::handle_github_event(&event, &user) {
             error!("Cannot process github message, error: {:?}", e);
             if let (Some(repo), Some(pr)) = (
                 event.get_repo_name().map(str::to_string),

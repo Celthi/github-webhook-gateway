@@ -17,6 +17,8 @@ use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
 use tracing::error;
 
+use self::user::User;
+
 pub fn get_work_product(s: &str) -> Option<String> {
     let pat = reg!(r"(?P<item_id>((DE)|(US))\d{4,8}(\s*,\s*((DE)|(US))\d{4,8})*)");
     let s_upper = s.to_uppercase();
@@ -53,7 +55,7 @@ pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Res
     Err(anyhow::anyhow!(format!("post comment failed {}", e)))
 }
 
-pub async fn get_user_name(login: &str) -> Result<String> {
+pub async fn get_user_name(login: &str) -> Result<User> {
     let url = format!("https://api.github.com/users/{login}",);
 
     let client = reqwest::Client::new();
@@ -70,8 +72,7 @@ pub async fn get_user_name(login: &str) -> Result<String> {
         .send()
         .await?;
 
-    let user = get_results::<user::User>(res).await?;
-    user.email.ok_or(anyhow!("No user name"))
+    get_results::<user::User>(res).await
 }
 
 async fn get_results<T: DeserializeOwned>(resp: Response) -> Result<T> {

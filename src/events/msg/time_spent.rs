@@ -53,7 +53,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     pat.captures(s).and_then(|m| m.name("t")).and_then(|n| {
         wp.map(|wp| TimeSpent {
             user: event.get_user_name(),
-            login: name.or(Some(event.get_login_name().to_string())).unwrap(),
+            login: name.unwrap_or(event.get_login_name().to_string()),
             value: n.as_str().parse().unwrap_or(1.0),
             id: rand::random::<u64>(),
             wp_formatted_id: Some(wp),
