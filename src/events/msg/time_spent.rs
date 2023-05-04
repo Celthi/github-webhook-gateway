@@ -8,15 +8,16 @@ use tracing::info;
 
 #[derive(Deserialize, Serialize, Default, Clone)]
 pub struct TimeSpent {
-    user: String,
-    login: String,
-    value: f32,
+    user: String,  // friendly name
+    login: String, // unique name
+    value: f32,    // time spent
     id: u64,
     wp_formatted_id: Option<String>,
     repo_name: Option<String>,
     pr_number: Option<u64>,
     task_name: Option<String>,
 }
+
 pub trait TimeSpentTrait {
     fn get_repo_name(&self) -> Option<&str>;
     fn get_pr_number(&self) -> Option<u64>;

@@ -1,8 +1,7 @@
-use std::time::Duration;
-use tracing::error;
 use rdkafka::config::ClientConfig;
 use rdkafka::producer::{FutureProducer, FutureRecord};
-
+use std::time::Duration;
+use tracing::error;
 
 pub async fn produce(brokers: &str, topic_name: &str, payload: &Vec<u8>, key: u64) {
     let producer: &FutureProducer = &ClientConfig::new()

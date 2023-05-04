@@ -1,11 +1,7 @@
-
 use anyhow::Result;
-use poem::{
-    handler, listener::TcpListener, middleware::Tracing, post, EndpointExt, Route,
-    Server,
-};
-
+use poem::{handler, listener::TcpListener, middleware::Tracing, post, EndpointExt, Route, Server};
 mod api;
+
 #[tokio::main]
 pub async fn event_loop() -> Result<(), std::io::Error> {
     if std::env::var_os("RUST_LOG").is_none() {

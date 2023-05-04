@@ -115,7 +115,7 @@ pub fn ensure_config() {
     match ConfigEnv::new() {
         Ok(c) => {
             if let Err(e) = CONFIG.set(c) {
-                eprintln!("reading env variable failed: {:?}", e);
+                eprintln!("creating config_env failed: {:?}", e);
             }
         }
 

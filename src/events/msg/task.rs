@@ -1,7 +1,7 @@
 use crate::config_env;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
-use tracing::info;
+use tracing::{info, error};
 use crate::events::github;
 use crate::kafka;
 
@@ -60,7 +60,7 @@ pub fn get_task_from_str(
     let ocr_body = OCRBody::from_str(s);
     if ocr_body.BuildNo.is_empty() {
         bail!(format!(
-            "\r\n Build number is required.\r\n Please read the {doc}",
+            "\r\n Build number is **required**.\r\n Please read the {doc}",
             doc = config_env::xt_doc_url()
         ));
     }
@@ -143,7 +143,8 @@ async fn post_sending_task(body: reqwest::Response, task: &Task) -> Result<()> {
         err = result,
         doc = config_env::xt_doc_url()
     );
-    github::post_issue_comment(&task.RepoName, task.PR, &error_message).await
+    error!("{}{}{}", &task.RepoName, task.PR, &error_message);
+    Ok(())
 }
 
 
