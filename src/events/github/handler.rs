@@ -20,7 +20,7 @@ pub fn handle_github_event(event: &GithubEvent, name: Option<String>) -> Result<
     if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
         handle_time_spent_event(comment, event, name)?;
     } else if constants::contains_ocr_patten(comment) {
-        handle_ocr_event(event, comment, name)?;
+        handle_ocr_event(event, comment)?;
     }
 
     Ok(())
@@ -29,14 +29,13 @@ pub fn handle_github_event(event: &GithubEvent, name: Option<String>) -> Result<
 fn handle_ocr_event(
     event: &GithubEvent,
     comment: &str,
-    name: Option<String>,
 ) -> Result<(), anyhow::Error> {
     let (Some(repo), Some(pr)) = (event.get_repo_name(), event.get_pr_number())  else { return Ok(());};
     let task = task::get_task_from_str(
         comment,
         repo.to_string(),
         pr,
-        name.or(Some(event.get_user_name())).unwrap(),
+        event.get_user_name(),
     )?;
     let s = queue::get_sender();
     let guard = s.lock();

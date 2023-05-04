@@ -66,11 +66,12 @@ pub async fn get_user_name(login: &str) -> Result<String> {
         )
         .header("Accept", "application/vnd.github+json")
         .header("X-GitHub-Api-Version", "2022-11-28")
+        .header("User-Agent", "chat-aba")
         .send()
         .await?;
 
     let user = get_results::<user::User>(res).await?;
-    user.name.ok_or(anyhow!("No user name"))
+    user.email.ok_or(anyhow!("No user name"))
 }
 
 async fn get_results<T: DeserializeOwned>(resp: Response) -> Result<T> {
