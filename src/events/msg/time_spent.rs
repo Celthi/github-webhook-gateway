@@ -45,6 +45,7 @@ impl TimeSpent {
 pub fn get_time_spent<T: TimeSpentTrait>(
     s: &str,
     event: &T,
+    name: Option<String>,
     task_name: Option<String>,
 ) -> Option<TimeSpent> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
@@ -52,7 +53,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     pat.captures(s).and_then(|m| m.name("t")).and_then(|n| {
         wp.map(|wp| TimeSpent {
             user: event.get_user_name(),
-            login: event.get_login_name().to_string(),
+            login: name.or(Some(event.get_login_name().to_string())).unwrap(),
             value: n.as_str().parse().unwrap_or(1.0),
             id: rand::random::<u64>(),
             wp_formatted_id: Some(wp),

@@ -1,6 +1,6 @@
 use crate::constants;
-use crate::events::github;
 use crate::events;
+use crate::events::github;
 
 use crate::events::msg::time_spent::TimeSpentTrait;
 use poem::{handler, web::Json};
@@ -28,17 +28,18 @@ pub fn process(req: String) -> Json<serde_json::Value> {
             "message": "Cannot process github message"}));
         }
     };
-    if let Err(e) = events::github::handler::handle_github_event(&event) {
-        error!("Cannot process github message, error: {:?}", e);
-        if let (Some(repo), Some(pr)) = (
-            event.get_repo_name().map(str::to_string),
-            event.get_pr_number(),
-        ) {
-            tokio::spawn(async move {
+    tokio::spawn(async move {
+        let name = github::get_user_name(event.get_login_name()).await;
+        if let Err(e) = events::github::handler::handle_github_event(&event, name.ok()) {
+            error!("Cannot process github message, error: {:?}", e);
+            if let (Some(repo), Some(pr)) = (
+                event.get_repo_name().map(str::to_string),
+                event.get_pr_number(),
+            ) {
                 let _ = github::post_issue_comment(&repo, pr, &format!("{}", e)).await;
-            });
+            }
         }
-    }
+    });
 
     Json(serde_json::json! ({
         "code": 0,

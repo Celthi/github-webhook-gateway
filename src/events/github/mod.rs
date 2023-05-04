@@ -10,8 +10,12 @@ mod sender;
 mod user;
 use crate::config_env;
 use crate::reg;
-use anyhow::Result;
+use anyhow::{anyhow, Result};
+use reqwest;
+use reqwest::Response;
+use serde::de::DeserializeOwned;
 use serde::{Deserialize, Serialize};
+use tracing::error;
 
 pub fn get_work_product(s: &str) -> Option<String> {
     let pat = reg!(r"(?P<item_id>((DE)|(US))\d{4,8}(\s*,\s*((DE)|(US))\d{4,8})*)");
@@ -47,6 +51,46 @@ pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Res
             return Ok(());
     };
     Err(anyhow::anyhow!(format!("post comment failed {}", e)))
+}
+
+pub async fn get_user_name(login: &str) -> Result<String> {
+    let url = format!("https://api.github.com/users/{login}",);
+
+    let client = reqwest::Client::new();
+
+    let res = client
+        .get(url)
+        .header(
+            "Authorization",
+            format!("Bearer {}", config_env::get_github_token()),
+        )
+        .header("Accept", "application/vnd.github+json")
+        .header("X-GitHub-Api-Version", "2022-11-28")
+        .send()
+        .await?;
+
+    let user = get_results::<user::User>(res).await?;
+    user.name.ok_or(anyhow!("No user name"))
+}
+
+async fn get_results<T: DeserializeOwned>(resp: Response) -> Result<T> {
+    let status = resp.status();
+    let text = resp.text().await?;
+    if status.is_success() {
+        match serde_json::from_str::<T>(&text) {
+            Ok(o) => Ok(o),
+            Err(e) => {
+                error!(
+                    "cannot convert the Rally response to the object model: {:?}, text: {}",
+                    e, text
+                );
+                Err(anyhow!("{:?}. {}", e, text))
+            }
+        }
+    } else {
+        error!("fetch response from Rally meet error: {}", text);
+        Err(anyhow!(format!("Error while geting response from the Rally. Possible reason: 1. Rally server is down. 2 Your Rally API token is invalid. \r\n\r\n. Rally Response is: {}", text)))
+    }
 }
 
 #[cfg(test)]

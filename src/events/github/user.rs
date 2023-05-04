@@ -5,4 +5,5 @@ pub struct User {
     id: u64,
     url: String,
     repos_url: String,
+    pub name: Option<String>,
 }
