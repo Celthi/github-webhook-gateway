@@ -23,7 +23,6 @@ pub fn handle_github_event(event: &GithubEvent, user: &User) -> Result<()> {
     } else if constants::contains_ocr_patten(comment) {
         handle_ocr_event(event, &user, comment)?;
     }
-
     Ok(())
 }
 
