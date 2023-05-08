@@ -1,7 +1,7 @@
-use crate::events::msg::time_spent::TimeSpentTrait;
 use crate::events;
 use crate::events::msg::queue;
 use crate::events::msg::time_spent;
+use crate::events::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 
 pub fn handle_rally_event<T: TimeSpentTrait>(event: &T, task_name: Option<String>) -> Result<()> {

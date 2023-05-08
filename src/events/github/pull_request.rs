@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use super::get_work_product;
+use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize)]
 pub struct PullRequest {

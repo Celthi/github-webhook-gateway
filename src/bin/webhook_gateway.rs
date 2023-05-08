@@ -1,9 +1,9 @@
+use std::thread;
+use tracing::level_filters;
 use webhook_gateway::config_env;
 use webhook_gateway::events;
 use webhook_gateway::events::msg::queue;
 use webhook_gateway::web;
-use std::thread;
-use tracing::{level_filters};
 
 fn main() {
     let filter = level_filters::LevelFilter::INFO;

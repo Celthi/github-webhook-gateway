@@ -1,9 +1,9 @@
 use crate::config_env;
-use anyhow::{bail, Result};
-use serde::{Deserialize, Serialize};
-use tracing::{info, error};
 use crate::events::github;
 use crate::kafka;
+use anyhow::{bail, Result};
+use serde::{Deserialize, Serialize};
+use tracing::{error, info};
 
 #[allow(non_snake_case)]
 #[derive(Deserialize, Serialize, Default, ColonBuilder, Clone)]
@@ -51,12 +51,7 @@ impl Task {
     }
 }
 
-pub fn get_task_from_str(
-    s: &str,
-    repo: String,
-    pr_number: u64,
-    member: String,
-) -> Result<Task> {
+pub fn get_task_from_str(s: &str, repo: String, pr_number: u64, member: String) -> Result<Task> {
     let ocr_body = OCRBody::from_str(s);
     if ocr_body.BuildNo.is_empty() {
         bail!(format!(
@@ -85,7 +80,7 @@ pub async fn handle_task(task: Task) {
         )
         .await;
     });
-    
+
     if config_env::is_backend_api_enable() {
         info!("Beginning sending task...");
         tokio::spawn(async move {
@@ -105,7 +100,10 @@ async fn sending_task(task: Task) -> Result<()> {
             config_env::get_backend_host(),
             config_env::get_backend_port()
         ))
-        .header("Authorization", config_env::get_backend_api_token().unwrap())
+        .header(
+            "Authorization",
+            config_env::get_backend_api_token().unwrap(),
+        )
         .header("Accept", "application/json")
         .json(&task)
         .send()
@@ -114,8 +112,7 @@ async fn sending_task(task: Task) -> Result<()> {
         Ok(body) => post_sending_task(body, &task).await,
         Err(e) => {
             info!("Failed sending job {:?}", e);
-            github::post_issue_comment(&task.RepoName, task.PR, &e.to_string())
-                .await
+            github::post_issue_comment(&task.RepoName, task.PR, &e.to_string()).await
         }
     }
 }
@@ -146,7 +143,6 @@ async fn post_sending_task(body: reqwest::Response, task: &Task) -> Result<()> {
     error!("{}{}{}", &task.RepoName, task.PR, &error_message);
     Ok(())
 }
-
 
 #[cfg(test)]
 mod test {
