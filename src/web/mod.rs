@@ -9,7 +9,6 @@ pub async fn event_loop() -> Result<(), std::io::Error> {
     }
     let router = Route::new();
     let app = router
-        .at("/healthz", health_check)
         .at("/ocr_webhook", post(api::github::process))
         .at("/rally_webhook", post(api::rally::process))
         .with(Tracing);
@@ -17,6 +16,3 @@ pub async fn event_loop() -> Result<(), std::io::Error> {
         .run(app)
         .await
 }
-
-#[handler(method = "get")]
-async fn health_check() {}
