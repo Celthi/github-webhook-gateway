@@ -4,7 +4,6 @@ use crate::kafka;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use tracing::{error, info};
-
 #[allow(non_snake_case)]
 #[derive(Deserialize, Serialize, Default, ColonBuilder, Clone)]
 struct OCRBody {
@@ -32,6 +31,7 @@ struct OCRBody {
     XYatiInfrastructure: String,
     Platform: Option<String>,
     Flag: Option<Vec<String>>,
+    comment: Option<String>,
 }
 
 #[allow(non_snake_case)]
@@ -52,14 +52,14 @@ impl Task {
 }
 
 pub fn get_task_from_str(s: &str, repo: String, pr_number: u64, member: String) -> Result<Task> {
-    let ocr_body = OCRBody::from_str(s);
+    let mut ocr_body = OCRBody::from_str(s);
     if ocr_body.BuildNo.is_empty() {
         bail!(format!(
             "\r\n Build number is **required**.\r\n Please read the {doc}",
             doc = config_env::xt_doc_url()
         ));
     }
-
+    ocr_body.comment = Some(s.to_string());
     Ok(Task {
         APIToken: config_env::get_backend_api_token(),
         PR: pr_number,

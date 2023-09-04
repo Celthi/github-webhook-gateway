@@ -2,3 +2,4 @@ target
 t.sh
 comment.json
 .env
+.DS_Store

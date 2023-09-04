@@ -1,5 +1,5 @@
 use anyhow::Result;
-use poem::{handler, listener::TcpListener, middleware::Tracing, post, EndpointExt, Route, Server};
+use poem::{listener::TcpListener, middleware::Tracing, post, EndpointExt, Route, Server};
 mod api;
 
 #[tokio::main]
