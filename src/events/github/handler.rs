@@ -21,7 +21,7 @@ pub fn handle_github_event(event: &GithubEvent, user: &User) -> Result<()> {
     if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
         handle_time_spent_event(event, user, comment)?;
     } else if constants::contains_ocr_patten(comment) {
-        handle_ocr_event(event, &user, comment)?;
+        handle_ocr_event(event, user, comment)?;
     }
     Ok(())
 }
