@@ -16,6 +16,7 @@ pub struct TimeSpent {
     repo_name: Option<String>,
     pr_number: Option<u64>,
     task_name: Option<String>,
+    source: Option<String>,
 }
 
 pub trait TimeSpentTrait {
@@ -40,6 +41,7 @@ impl TimeSpent {
     pub fn get_pr_number(&self) -> Option<u64> {
         self.pr_number
     }
+
 }
 
 pub fn get_time_spent<T: TimeSpentTrait>(
@@ -47,6 +49,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     event: &T,
     name: Option<String>,
     task_name: Option<String>,
+    source: Option<String>,
 ) -> Option<TimeSpent> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
     let wp = event.get_work_product();
@@ -60,6 +63,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
             repo_name: event.get_repo_name().map(|s| s.to_string()),
             pr_number: event.get_pr_number(),
             task_name,
+            source,
         })
     })
 }

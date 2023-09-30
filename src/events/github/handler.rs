@@ -42,7 +42,7 @@ fn handle_ocr_event(event: &GithubEvent, user: &User, comment: &str) -> Result<(
 }
 
 fn handle_time_spent_event(event: &GithubEvent, user: &User, comment: &str) -> Result<()> {
-    let Some(tp) = time_spent::get_time_spent(comment, event, user.email.clone(), None) else { return Ok(());};
+    let Some(tp) = time_spent::get_time_spent(comment, event, user.email.clone(), None, Some("github".to_string())) else { return Ok(());};
     let s = queue::get_sender();
     let guard = s.lock();
     let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc

@@ -23,6 +23,9 @@ impl Event {
         let res: Self = serde_json::from_str(payload)?;
         Ok(res)
     }
+    pub fn get_user_name(&self) -> &str {
+        &self.message.transaction.user.username
+    }
 }
 
 impl TimeSpentTrait for Event {
