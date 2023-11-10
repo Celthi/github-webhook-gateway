@@ -17,6 +17,7 @@ pub struct TimeSpent {
     pr_number: Option<u64>,
     task_name: Option<String>,
     source: Option<String>,
+    text: Option<String>,
 }
 
 pub trait TimeSpentTrait {
@@ -64,6 +65,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
             pr_number: event.get_pr_number(),
             task_name,
             source,
+            text: Some(s.to_string()),
         })
     })
 }

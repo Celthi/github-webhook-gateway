@@ -14,9 +14,8 @@ pub fn process(req: String) -> Json<serde_json::Value> {
     }
     match rally::Event::new(&req) {
         Ok(e) => {
-            let task_name = format!("{}: {}", e.get_user_name().split('@').next().or(Some("TNT")).unwrap(), "Review and Support");
             if let Err(e) =
-                rally::handler::handle_rally_event(&e, Some(task_name))
+                rally::handler::handle_rally_event(&e, None)
             {
                 error!("Cannot handle rally message, error: {}{:?}", req, e);
                 return Json(serde_json::json! ({
