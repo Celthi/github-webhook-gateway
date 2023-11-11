@@ -4,6 +4,7 @@ use crate::kafka;
 use anyhow::{bail, Result};
 use serde::{Deserialize, Serialize};
 use tracing::{error, info};
+
 #[allow(non_snake_case)]
 #[derive(Deserialize, Serialize, Default, ColonBuilder, Clone)]
 struct OCRBody {

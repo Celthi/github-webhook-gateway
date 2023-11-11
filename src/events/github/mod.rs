@@ -30,6 +30,7 @@ pub fn get_work_product(s: &str) -> Option<String> {
 pub struct PostComment<'a> {
     body: &'a str,
 }
+
 pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Result<()> {
     let comment_url = format!(
         "https://github.com/api/v3/repos/{}/issues/{}/comments",
@@ -48,9 +49,10 @@ pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Res
         .header("Accept", "application/vnd.github+json")
         .json(data)
         .send()
-        .await else {
-            println!("{:?}", data);
-            return Ok(());
+        .await
+    else {
+        println!("{:?}", data);
+        return Ok(());
     };
     Err(anyhow::anyhow!(format!("post comment failed {}", e)))
 }

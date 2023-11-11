@@ -7,6 +7,7 @@ use super::sender::Sender;
 use crate::events::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
+
 #[derive(Deserialize, Serialize)]
 pub struct GithubEvent {
     action: String,
@@ -17,6 +18,7 @@ pub struct GithubEvent {
     sender: Sender,
     pull_request: Option<PullRequest>,
 }
+
 impl TimeSpentTrait for GithubEvent {
     fn get_repo_name(&self) -> Option<&str> {
         Some(self.repository.get_full_name())
@@ -64,6 +66,7 @@ impl TimeSpentTrait for GithubEvent {
         self.sender.get_login_name()
     }
 }
+
 impl GithubEvent {
     pub fn new(payload: &str) -> Result<GithubEvent> {
         let res: GithubEvent = serde_json::from_str(payload)?;
