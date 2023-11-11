@@ -1,6 +1,6 @@
 #!/bin/bash
 version=2.22.7
-cargo check && docker build . --network=host -t webhook_gateway:$version
+docker build . --network=host -t webhook_gateway:$version
 sleep 1
 if [[ $? -ne 0 ]]; then
     echo "Build failed"
