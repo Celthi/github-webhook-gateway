@@ -12,12 +12,12 @@ pub struct TimeSpent {
     login: String, // unique name
     value: f32,    // time spent
     id: u64,
+    text: String,
     wp_formatted_id: Option<String>,
     repo_name: Option<String>,
     pr_number: Option<u64>,
     task_name: Option<String>,
     source: Option<String>,
-    text: Option<String>,
 }
 
 pub trait TimeSpentTrait {
@@ -46,7 +46,7 @@ impl TimeSpent {
 }
 
 pub fn get_time_spent<T: TimeSpentTrait>(
-    s: &str,
+    text: &str,
     event: &T,
     name: Option<String>,
     task_name: Option<String>,
@@ -54,18 +54,18 @@ pub fn get_time_spent<T: TimeSpentTrait>(
 ) -> Option<TimeSpent> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
     let wp = event.get_work_product();
-    pat.captures(s).and_then(|m| m.name("t")).and_then(|n| {
+    pat.captures(text).and_then(|m| m.name("t")).and_then(|n| {
         wp.map(|wp| TimeSpent {
             user: event.get_user_name(),
             login: name.unwrap_or(event.get_login_name().to_string()),
             value: n.as_str().parse().unwrap_or(1.0),
             id: rand::random::<u64>(),
+            text: text.to_string(),
             wp_formatted_id: Some(wp),
             repo_name: event.get_repo_name().map(|s| s.to_string()),
             pr_number: event.get_pr_number(),
             task_name,
             source,
-            text: Some(s.to_string()),
         })
     })
 }

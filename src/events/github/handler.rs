@@ -18,7 +18,7 @@ pub fn handle_github_event(event: &GithubEvent, user: &User) -> Result<()> {
         .get_code()
         .ok_or(anyhow!("No comment in the github event"))?;
     // somehow submit a review will create two events: edited and submitted, only care the 'submitted' event only.
-    if constants::contains_time_spent_pattern(comment) && event.get_action() != "edited" {
+    if constants::contains_time_spent_pattern(comment) && event.get_action() == "submitted" {
         handle_time_spent_event(event, user, comment)?;
     } else if constants::contains_ocr_patten(comment) {
         handle_ocr_event(event, user, comment)?;
