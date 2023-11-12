@@ -2,10 +2,11 @@ use crate::constants;
 use crate::events::rally;
 use poem::{handler, web::Json};
 use serde_json;
-use tracing::error;
+use tracing::{error, info};
 
 #[handler]
 pub fn process(req: String) -> Json<serde_json::Value> {
+    info!(req);
     if !constants::contains_rally_pattern(&req) {
         return Json(serde_json::json! ({
             "code": 0,

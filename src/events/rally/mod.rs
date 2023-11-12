@@ -40,7 +40,7 @@ impl TimeSpentTrait for Event {
         None
     }
     fn get_code(&self) -> Option<&str> {
-        Some(&self.message.state.text.value)
+        self.message.state.text.value.as_deref()
     }
     fn get_user_name(&self) -> String {
         self.message.transaction.user.username.clone()
@@ -86,6 +86,6 @@ struct WorkProduct {
 }
 #[derive(Serialize, Deserialize)]
 struct Text {
-    value: String,
+    value: Option<String>,
     name: String,
 }
