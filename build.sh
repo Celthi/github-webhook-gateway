@@ -1,5 +1,5 @@
 #!/bin/bash
-version=2.22.7
+version=2.22.8
 docker build . --network=host -t webhook_gateway:$version
 sleep 1
 if [[ $? -ne 0 ]]; then

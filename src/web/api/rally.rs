@@ -14,6 +14,12 @@ pub fn process(req: String) -> Json<serde_json::Value> {
     }
     match rally::Event::new(&req) {
         Ok(e) => {
+            if e.get_action() != "Created" {
+                return Json(serde_json::json!({
+                    "code": 1,
+                    "message": "not interested action"
+                }));
+            }
             if let Err(e) =
                 rally::handler::handle_rally_event(&e, None)
             {

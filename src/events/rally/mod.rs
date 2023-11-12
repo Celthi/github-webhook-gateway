@@ -3,6 +3,7 @@ use crate::events::msg::time_spent::TimeSpentTrait;
 use anyhow::Result;
 use serde::{Deserialize, Serialize};
 
+// doc https://rally1.rallydev.com/apps/pigeon/docs/webhooks
 #[derive(Serialize, Deserialize)]
 pub struct Event {
     message: Message,
@@ -25,6 +26,9 @@ impl Event {
     }
     pub fn get_user_name(&self) -> &str {
         &self.message.transaction.user.username
+    }
+    pub fn get_action(&self) -> &str{
+        &self.message.action
     }
 }
 
@@ -60,6 +64,7 @@ struct Message {
     object_type: String,
     state: State,
     transaction: Transaction,
+    action: String,
 }
 #[derive(Serialize, Deserialize)]
 struct State {
