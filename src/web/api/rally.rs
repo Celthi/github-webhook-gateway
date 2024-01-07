@@ -1,32 +1,19 @@
 use crate::constants;
 use crate::events::rally;
-use poem::{handler, web::Json};
-use serde_json;
-use tracing::{error, info};
+use tracing::error;
 
-#[handler]
-pub fn process(req: String) -> Json<serde_json::Value> {
+pub async fn process(req: String) -> &'static str {
     if !constants::contains_rally_pattern(&req) {
-        return Json(serde_json::json! ({
-            "code": 0,
-            "message": "Not interested.",
-        }));
+        return "not interested";
     }
     match rally::Event::new(&req) {
         Ok(e) => {
             if e.get_action() != "Created" {
-                return Json(serde_json::json!({
-                    "code": 1,
-                    "message": "not interested action"
-                }));
+                return "not interested action";
             }
-            if let Err(e) =
-                rally::handler::handle_rally_event(&e, None)
-            {
+            if let Err(e) = rally::handler::handle_rally_event(&e, None) {
                 error!("Cannot handle rally message, error: {}{:?}", req, e);
-                return Json(serde_json::json! ({
-                    "code": 0,
-                    "message": "Finish processing rally event"}));
+                return "Finish processing rally event";
             }
         }
         Err(e) => {
@@ -34,7 +21,5 @@ pub fn process(req: String) -> Json<serde_json::Value> {
         }
     }
 
-    Json(serde_json::json! ({
-        "code": 0,
-        "message": "Finish processing rally event"}))
+    "Finish processing rally event"
 }

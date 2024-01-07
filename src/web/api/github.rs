@@ -1,19 +1,12 @@
 use crate::constants;
 use crate::events;
 use crate::events::github;
-
 use crate::events::msg::time_spent::TimeSpentTrait;
-use poem::{handler, web::Json};
-use serde_json;
 use tracing::error;
 
-#[handler]
-pub fn process(req: String) -> Json<serde_json::Value> {
+pub async fn process(req: String) -> &'static str {
     if !constants::contain_keywords(&req) {
-        return Json(serde_json::json! ({
-            "code": 0,
-            "message": "Not interested.",
-        }));
+        return "not interested";
     }
 
     let event = match github::event::GithubEvent::new(&req) {
@@ -23,9 +16,7 @@ pub fn process(req: String) -> Json<serde_json::Value> {
                 "Cannot process github message, error: {:?}\n. payload is:\n{}",
                 e, req
             );
-            return Json(serde_json::json! ({
-            "code": 0,
-            "message": "Cannot process github message"}));
+            return "Cannot process github message";
         }
     };
     tokio::spawn(async move {
@@ -47,7 +38,5 @@ pub fn process(req: String) -> Json<serde_json::Value> {
         }
     });
 
-    Json(serde_json::json! ({
-        "code": 0,
-        "message": "Finish processing github event"}))
+    "Finish processing github event"
 }
