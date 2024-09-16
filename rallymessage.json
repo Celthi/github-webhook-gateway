@@ -1,0 +1,277 @@
+{
+  "message": {
+    "object_id": "98feba98-00fc-4d36-8028-0de736eb2153",
+    "ref": "https://rally1.rallydev.com/slm/webservice/v2.x/conversationpost/98feba98-00fc-4d36-8028-0de736eb2153",
+    "object_type": "ConversationPost",
+    "transaction": {
+      "trace_id": "e8739931-2d57-4d7d-800e-86c049103656",
+      "timestamp": 1699754703097,
+      "user": {
+        "uuid": "643e90b9-6763-4008-8625-65e02ca87d29",
+        "username": "xialu@microstrategy.com",
+        "email": "xialu@microstrategy.com"
+      },
+      "message_id": "fe640c52-b899-467b-955d-f57e05a71ec3",
+      "parent_span_id": "73d15172-654d-4174-b136-cfb05d6a032e",
+      "span_id": "af23cdf8-132d-4d91-9ba5-f92e7d152842",
+      "message_lag": 40
+    },
+    "state": {
+      "c3d4f057-0781-4660-8ce7-bc8514bf0945": {
+        "value": null,
+        "type": "Raw",
+        "name": "ObjectUUID",
+        "display_name": "ObjectUUID",
+        "ref": null
+      },
+      "5089b9f4-8598-402d-b820-de5bd0cf6f04": {
+        "value": null,
+        "type": "Integer",
+        "name": "PostNumber",
+        "display_name": "Post Number",
+        "ref": null
+      },
+      "ab28176e-a7ec-4d8a-b455-05ebe534fb87": {
+        "value": null,
+        "type": "Date",
+        "name": "LastUpdateDate",
+        "display_name": "Last Update Date",
+        "ref": null
+      },
+      "17f72ea6-04fd-449e-925c-89ac079c0668": {
+        "value": null,
+        "type": "Workspace",
+        "name": "Workspace",
+        "display_name": "Workspace",
+        "ref": null
+      },
+      "26803fda-2e78-4d9f-931d-84b8261d6f7b": {
+        "value": null,
+        "type": "Text",
+        "name": "Text",
+        "display_name": "Text",
+        "ref": null
+      },
+      "f705ed17-9239-427e-8f34-10bbe088297e": {
+        "value": null,
+        "type": "Subscription",
+        "name": "Subscription",
+        "display_name": "Subscription",
+        "ref": null
+      },
+      "95ac2b13-e4ee-413e-af83-42aaf4b53626": {
+        "value": null,
+        "type": "Date",
+        "name": "CreationDate",
+        "display_name": "Creation Date",
+        "ref": null
+      },
+      "f5b1fb22-6c15-44b5-a592-19189fafe5f2": {
+        "value": null,
+        "type": "Integer",
+        "name": "VersionId",
+        "display_name": "VersionId",
+        "ref": null
+      },
+      "e43d0c61-7225-4e59-983f-ea05c2c6274d": {
+        "value": null,
+        "type": "Artifact",
+        "name": "Artifact",
+        "display_name": "Artifact",
+        "ref": null
+      },
+      "2910ca71-9779-4e7b-8fcf-d718c919aff8": {
+        "value": null,
+        "type": "Integer",
+        "name": "ObjectID",
+        "display_name": "Object ID",
+        "ref": null
+      },
+      "11f768fa-7e6a-4a94-863d-f9e59d190dd5": {
+        "value": null,
+        "type": "User",
+        "name": "User",
+        "display_name": "User",
+        "ref": null
+      }
+    },
+    "subscription_id": 61970,
+    "message_id": "fe640c52-b899-467b-955d-f57e05a71ec3",
+    "project": {
+      "uuid": "85e166d8-183b-4e64-8da5-19f145c423be",
+      "name": "AA-Insights Engine"
+    },
+    "id": "98feba98-00fc-4d36-8028-0de736eb2153",
+    "detail_link": null,
+    "message_version": 2,
+    "changes": {
+      "c3d4f057-0781-4660-8ce7-bc8514bf0945": {
+        "value": null,
+        "old_value": "98feba98-00fc-4d36-8028-0de736eb2153",
+        "added": null,
+        "removed": null,
+        "type": "Raw",
+        "name": "ObjectUUID",
+        "display_name": "ObjectUUID",
+        "ref": null
+      },
+      "5089b9f4-8598-402d-b820-de5bd0cf6f04": {
+        "value": null,
+        "old_value": 6,
+        "added": null,
+        "removed": null,
+        "type": "Integer",
+        "name": "PostNumber",
+        "display_name": "Post Number",
+        "ref": null
+      },
+      "ab28176e-a7ec-4d8a-b455-05ebe534fb87": {
+        "value": null,
+        "old_value": "2023-11-12T02:04:44.967Z",
+        "added": null,
+        "removed": null,
+        "type": "Date",
+        "name": "LastUpdateDate",
+        "display_name": "Last Update Date",
+        "ref": null
+      },
+      "17f72ea6-04fd-449e-925c-89ac079c0668": {
+        "value": null,
+        "old_value": {
+          "name": "MicroStrategy Workspace",
+          "ref": "https://rally1.rallydev.com/slm/webservice/v2.x/workspace/784eb758-d23a-4fed-89e1-bb4269cec6ae",
+          "detail_link": "https://rally1.rallydev.com/slm/#/detail/workspace/27397600726",
+          "id": "784eb758-d23a-4fed-89e1-bb4269cec6ae",
+          "object_type": "Workspace"
+        },
+        "added": null,
+        "removed": null,
+        "type": "Workspace",
+        "name": "Workspace",
+        "display_name": "Workspace",
+        "ref": null
+      },
+      "26803fda-2e78-4d9f-931d-84b8261d6f7b": {
+        "value": null,
+        "old_value": "<p>&nbsp; update thanks 1! &nbsp;&nbsp;</p>",
+        "added": null,
+        "removed": null,
+        "type": "Text",
+        "name": "Text",
+        "display_name": "Text",
+        "ref": null
+      },
+      "f705ed17-9239-427e-8f34-10bbe088297e": {
+        "value": null,
+        "old_value": {
+          "name": "MicroStrategy",
+          "ref": "https://rally1.rallydev.com/slm/webservice/v2.x/subscription/1c9d7b4c-262f-4e28-b959-ceef903336fe",
+          "detail_link": "https://rally1.rallydev.com/slm/#/detail/subscription/26986876887",
+          "id": "1c9d7b4c-262f-4e28-b959-ceef903336fe",
+          "object_type": "Subscription"
+        },
+        "added": null,
+        "removed": null,
+        "type": "Subscription",
+        "name": "Subscription",
+        "display_name": "Subscription",
+        "ref": null
+      },
+      "95ac2b13-e4ee-413e-af83-42aaf4b53626": {
+        "value": null,
+        "old_value": "2023-11-10T13:46:10.118Z",
+        "added": null,
+        "removed": null,
+        "type": "Date",
+        "name": "CreationDate",
+        "display_name": "Creation Date",
+        "ref": null
+      },
+      "f5b1fb22-6c15-44b5-a592-19189fafe5f2": {
+        "value": null,
+        "old_value": 3,
+        "added": null,
+        "removed": null,
+        "type": "Integer",
+        "name": "VersionId",
+        "display_name": "VersionId",
+        "ref": null
+      },
+      "e43d0c61-7225-4e59-983f-ea05c2c6274d": {
+        "value": null,
+        "old_value": {
+          "name": "SQL to Viz Conversion | Multi-pass SQL - Merge collab code including multi-pass+textToViz to 23.12 branch",
+          "formatted_id": "US527935",
+          "ref": "https://rally1.rallydev.com/slm/webservice/v2.x/hierarchicalrequirement/39f34a19-048d-4f19-b0aa-c1c879351fdf",
+          "detail_link": "https://rally1.rallydev.com/slm/#/detail/userstory/730655471799",
+          "id": "39f34a19-048d-4f19-b0aa-c1c879351fdf",
+          "object_type": "Artifact"
+        },
+        "added": null,
+        "removed": null,
+        "type": "Artifact",
+        "name": "Artifact",
+        "display_name": "Artifact",
+        "ref": null
+      },
+      "2910ca71-9779-4e7b-8fcf-d718c919aff8": {
+        "value": null,
+        "old_value": 730839373887,
+        "added": null,
+        "removed": null,
+        "type": "Integer",
+        "name": "ObjectID",
+        "display_name": "Object ID",
+        "ref": null
+      },
+      "11f768fa-7e6a-4a94-863d-f9e59d190dd5": {
+        "value": null,
+        "old_value": {
+          "name": "Xianting Lu (@xialu) | Developer of Insight Engine",
+          "ref": "https://rally1.rallydev.com/slm/webservice/v2.x/user/643e90b9-6763-4008-8625-65e02ca87d29",
+          "detail_link": "https://rally1.rallydev.com/slm/#/detail/user/117009524380",
+          "id": "643e90b9-6763-4008-8625-65e02ca87d29",
+          "object_type": "User"
+        },
+        "added": null,
+        "removed": null,
+        "type": "User",
+        "name": "User",
+        "display_name": "User",
+        "ref": null
+      }
+    },
+    "action": "Deleted"
+  },
+  "rule": {
+    "LastUpdateDate": "2023-05-02T03:00:35.042Z",
+    "Expressions": [
+      {
+        "AttributeID": null,
+        "AttributeName": "Workspace",
+        "Operator": "!=",
+        "Value": ""
+      }
+    ],
+    "SubscriptionID": 61970,
+    "LastWebhookResponseTime": 86,
+    "ObjectTypes": ["ConversationPost"],
+    "LastSuccess": "2023-11-12T02:04:45.218Z",
+    "LastStatus": 200,
+    "_type": "webhook",
+    "OwnerID": "4e9127f2-46f4-4256-8f3b-3ba2846ffc0e",
+    "FireCount": 216568,
+    "TargetUrl": "http://199.255.80.240:31430/rally_webhook ",
+    "CreatedBy": null,
+    "_objectVersion": 1,
+    "Disabled": false,
+    "ErrorCount": 0,
+    "Name": "Time spent Webhook",
+    "LastFailure": "2023-10-31T13:36:37.264Z",
+    "AppName": "Time spent record Webhook",
+    "ObjectUUID": "55a5d6c1-85bc-4c37-82fd-13f0cbcac022",
+    "CreationDate": "2023-05-02T03:00:35.042Z",
+    "AppUrl": "XT time spent"
+  },
+  "Timestamp": "2023-11-12T02:05:03.145Z"
+}
