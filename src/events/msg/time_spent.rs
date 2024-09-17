@@ -86,7 +86,7 @@ pub async fn handle_time_spent(tp: TimeSpent) {
         (tp.get_repo_name().map(str::to_string), tp.get_pr_number())
     {
         tokio::spawn(async move {
-            let _ = github::post_issue_comment(&repo, pr, "Time And Task: not a valid time spent, please make sure your PR title to follow the guideline.").await;
+            let _ = github::post_issue_comment(&repo, pr, "Time And Task: not a valid time spent, please make sure your PR title to follow the guideline. For example, \"DE123456;...").await;
         });
     }
 }

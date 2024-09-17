@@ -10,10 +10,11 @@
             "name": "Debug unit tests in library 'webhook-gateway'",
             "cargo": {
                 "args": [
-                    "test",
-                    "--no-run",
+                    "test", 
                     "--lib",
-                    "--package=webhook-gateway"
+                    "--package=webhook-gateway",
+                    "--",
+                    
                 ],
                 "filter": {
                     "name": "webhook-gateway",

@@ -33,28 +33,30 @@ pub struct PostComment<'a> {
 
 pub async fn post_issue_comment(repo_name: &str, pr_number: u64, s: &str) -> Result<()> {
     let comment_url = format!(
-        "https://github.com/api/v3/repos/{}/issues/{}/comments",
+        "https://api.github.com/repos/{}/issues/{}/comments",
         repo_name, pr_number
     );
 
     let client = reqwest::Client::new();
     let data = &PostComment { body: s };
 
-    let Err(e) = client
+    let res = client
         .post(comment_url)
         .header(
             "Authorization",
-            format!("token {}", config_env::get_github_token()),
+            format!("Bearer {}", config_env::get_github_token()),
         )
         .header("Accept", "application/vnd.github+json")
+        .header("X-GitHub-Api-Version", "2022-11-28")
+        .header("User-Agent", "chat-aba")
         .json(data)
         .send()
-        .await
-    else {
-        println!("{:?}", data);
+        .await;
+    if res.is_ok() {
         return Ok(());
-    };
-    Err(anyhow::anyhow!(format!("post comment failed {}", e)))
+    }
+    let e = res.unwrap_err();
+    Err(anyhow::anyhow!(format!("post comment failed {:?}", e)))
 }
 
 pub async fn get_user_name(login: &str) -> Result<User> {
@@ -122,5 +124,20 @@ mod test {
             get_work_product("de123455, us382222: hihkdfd de1234556"),
             Some(vec!["DE123455".to_string(), "US382222".to_string()])
         );
+    }
+    // test post github comment
+    #[tokio::test]
+    async fn test_post_comment() {
+        // if the GITHUB_TOKEN is not set, skip the test
+        if config_env::get_github_token().is_empty() {
+            return;
+        }
+        config_env::ensure_config(); 
+        let  repo_name = "owner/repo";
+        let pr_number = 3368;
+        let s = "test comment";
+        let res = post_issue_comment(repo_name, pr_number, s).await;
+        println!("{:?}", res);
+        assert_eq!(res.is_ok(), true);
     }
 }
