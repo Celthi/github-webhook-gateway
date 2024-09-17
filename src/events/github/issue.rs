@@ -21,7 +21,7 @@ impl Issue {
     pub fn get_number(&self) -> u64 {
         self.number
     }
-    pub fn get_work_product(&self) -> Option<String> {
+    pub fn get_work_product(&self) -> Option<Vec<String>> {
         get_work_product(&self.title)
     }
 }

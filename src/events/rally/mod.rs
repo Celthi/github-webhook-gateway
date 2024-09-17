@@ -27,7 +27,7 @@ impl Event {
     pub fn get_user_name(&self) -> &str {
         &self.message.transaction.user.username
     }
-    pub fn get_action(&self) -> &str{
+    pub fn get_action(&self) -> &str {
         &self.message.action
     }
 }
@@ -45,13 +45,14 @@ impl TimeSpentTrait for Event {
     fn get_user_name(&self) -> String {
         self.message.transaction.user.username.clone()
     }
-    fn get_work_product(&self) -> Option<String> {
+    fn get_work_product(&self) -> Option<Vec<String>> {
         self.message
             .state
             .artifact
             .value
             .as_ref()
             .map(|a| a.formatted_id.clone())
+            .map(|f| vec![f])
     }
     fn get_login_name(&self) -> &str {
         &self.message.transaction.user.username

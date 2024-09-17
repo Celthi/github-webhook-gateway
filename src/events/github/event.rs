@@ -42,7 +42,7 @@ impl TimeSpentTrait for GithubEvent {
             .unwrap_or_else(|| "ocr_default".to_string())
     }
 
-    fn get_work_product(&self) -> Option<String> {
+    fn get_work_product(&self) -> Option<Vec<String>> {
         if self.pull_request.is_some() {
             return self
                 .pull_request

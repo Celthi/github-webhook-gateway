@@ -24,7 +24,7 @@ pub trait TimeSpentTrait {
     fn get_repo_name(&self) -> Option<&str>;
     fn get_pr_number(&self) -> Option<u64>;
     fn get_user_name(&self) -> String;
-    fn get_work_product(&self) -> Option<String>;
+    fn get_work_product(&self) -> Option<Vec<String>>;
     fn get_code(&self) -> Option<&str>;
     fn get_login_name(&self) -> &str;
 }
@@ -51,22 +51,22 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     name: Option<String>,
     task_name: Option<String>,
     source: Option<String>,
-) -> Option<TimeSpent> {
+) -> Option<Vec<TimeSpent>> {
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
     let wp = event.get_work_product();
     pat.captures(text).and_then(|m| m.name("t")).and_then(|n| {
-        wp.map(|wp| TimeSpent {
+        wp.map(|wp: Vec<String>| wp.into_iter().map(|wp| TimeSpent {
             user: event.get_user_name(),
-            login: name.unwrap_or(event.get_login_name().to_string()),
+            login: name.to_owned().unwrap_or(event.get_login_name().to_string()),
             value: n.as_str().parse().unwrap_or(1.0),
             id: rand::random::<u64>(),
             text: text.to_string(),
             wp_formatted_id: Some(wp),
             repo_name: event.get_repo_name().map(|s| s.to_string()),
             pr_number: event.get_pr_number(),
-            task_name,
-            source,
-        })
+            task_name: task_name.to_owned(),
+            source: source.to_owned(),
+        }).collect())
     })
 }
 

@@ -46,6 +46,9 @@ fn handle_time_spent_event(event: &GithubEvent, user: &User, comment: &str) -> R
     let s = queue::get_sender();
     let guard = s.lock();
     let sender = guard.expect("get sender fail."); // crash here if the channel is malfunc
-    sender.send(Message::TimeSpent(tp))?;
+    let mut res = tp.into_iter().map(|tp| sender.send(Message::TimeSpent(tp)));
+    if res.all(|r| r.is_err()) {
+        return Err(anyhow!("send time spent fail"));
+    }
     Ok(())
 }
