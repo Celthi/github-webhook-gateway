@@ -5,6 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "lldb debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceRoot}/target/debug/deps/webhook_gateway-4ab32220d6802c4f",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceRoot}/",
+            "osx": {
+                "MIMode": "lldb"
+              },
+
+        },
+        {
             "type": "lldb",
             "request": "launch",
             "name": "Debug unit tests in library 'webhook-gateway'",
@@ -13,8 +26,6 @@
                     "test", 
                     "--lib",
                     "--package=webhook-gateway",
-                    "--",
-                    
                 ],
                 "filter": {
                     "name": "webhook-gateway",

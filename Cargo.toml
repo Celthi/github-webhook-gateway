@@ -1,5 +1,5 @@
 [package]
-version = "2.22.8"
+version = "2.22.23"
 edition = "2021"
 name = "webhook-gateway"
 license = "MIT OR Apache-2.0"

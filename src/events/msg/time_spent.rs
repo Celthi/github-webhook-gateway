@@ -24,7 +24,7 @@ pub trait TimeSpentTrait {
     fn get_repo_name(&self) -> Option<&str>;
     fn get_pr_number(&self) -> Option<u64>;
     fn get_user_name(&self) -> String;
-    fn get_work_product(&self) -> Option<Vec<String>>;
+    fn get_work_product(&self) -> Vec<String>;
     fn get_code(&self) -> Option<&str>;
     fn get_login_name(&self) -> &str;
 }
@@ -55,7 +55,7 @@ pub fn get_time_spent<T: TimeSpentTrait>(
     let pat = reg!(r"(T|t)hanks\s(?P<t>(\d{1})|(\d\.\d{1,3}))!");
     let wp = event.get_work_product();
     pat.captures(text).and_then(|m| m.name("t")).and_then(|n| {
-        wp.map(|wp: Vec<String>| wp.into_iter().map(|wp| TimeSpent {
+        Some(wp.into_iter().map(|wp| TimeSpent {
             user: event.get_user_name(),
             login: name.to_owned().unwrap_or(event.get_login_name().to_string()),
             value: n.as_str().parse().unwrap_or(1.0),

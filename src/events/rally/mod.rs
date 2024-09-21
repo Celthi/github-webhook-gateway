@@ -45,14 +45,12 @@ impl TimeSpentTrait for Event {
     fn get_user_name(&self) -> String {
         self.message.transaction.user.username.clone()
     }
-    fn get_work_product(&self) -> Option<Vec<String>> {
-        self.message
-            .state
-            .artifact
-            .value
-            .as_ref()
-            .map(|a| a.formatted_id.clone())
-            .map(|f| vec![f])
+    fn get_work_product(&self) -> Vec<String> {
+        if let Some(wp) = self.message.state.artifact.value.as_ref() {
+            vec![wp.formatted_id.clone()]
+        } else {
+            vec![]
+        }
     }
     fn get_login_name(&self) -> &str {
         &self.message.transaction.user.username

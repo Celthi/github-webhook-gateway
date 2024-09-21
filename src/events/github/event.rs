@@ -42,14 +42,14 @@ impl TimeSpentTrait for GithubEvent {
             .unwrap_or_else(|| "ocr_default".to_string())
     }
 
-    fn get_work_product(&self) -> Option<Vec<String>> {
-        if self.pull_request.is_some() {
-            return self
-                .pull_request
-                .as_ref()
-                .and_then(|s| s.get_work_product());
+    fn get_work_product(&self) -> Vec<String> {
+        if let Some(pull_request) = self.pull_request.as_ref() {
+            return pull_request.get_work_product();
         }
-        self.issue.as_ref().and_then(|i| i.get_work_product())
+        if let Some(i) = self.issue.as_ref() {
+            return i.get_work_product();
+        }
+        vec![]
     }
 
     fn get_code(&self) -> Option<&str> {

@@ -19,11 +19,12 @@ use tracing::error;
 
 use self::user::User;
 
-pub fn get_work_product(s: &str) -> Option<Vec<String>> {
-    let pat = reg!(r"(?P<item_id>((DE)|(US))\d{4,8}(\s*,\s*((DE)|(US))\d{4,8})*)");
-    let s_upper = s.to_uppercase();
-    let m = pat.captures(&s_upper)?;
-    m.name("item_id").map(|n| n.as_str().split(',').to_owned()).map(|i| i.map(|s| s.trim().to_string()).collect())
+pub fn get_work_product(s: &str) -> Vec<String> {
+    let pat = reg!(r"((?i)((DE)|(US)))\d{6,7}");
+    let s = s.to_uppercase();
+    pat.find_iter(&s)
+        .map(|m| m.as_str().to_owned())
+        .collect()
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -106,23 +107,23 @@ mod test {
     fn extract_us() {
         assert_eq!(
             get_work_product("DE123455; hihkdfd"),
-            Some(vec!["DE123455".to_string()])
+            vec!["DE123455".to_string()]
         );
         assert_eq!(
             get_work_product("DE123455: hihkdfd"),
-            Some(vec!["DE123455".to_string()])
+            vec!["DE123455".to_string()]
         );
         assert_eq!(
             get_work_product("de123455: hihkdfd"),
-            Some(vec!["DE123455".to_string()])
+            vec!["DE123455".to_string()]
         );
         assert_eq!(
             get_work_product("de123455: hihkdfd de1234556"),
-            Some(vec!["DE123455".to_string()])
+            vec!["DE123455".to_string(), "DE1234556".to_string()]
         );
         assert_eq!(
-            get_work_product("de123455, us382222: hihkdfd de1234556"),
-            Some(vec!["DE123455".to_string(), "US382222".to_string()])
+            get_work_product("de123455, us382222: hihkdfd dfad"),
+            vec!["DE123455".to_string(), "US382222".to_string()]
         );
     }
     // test post github comment

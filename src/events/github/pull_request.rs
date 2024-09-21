@@ -13,7 +13,7 @@ impl PullRequest {
     pub fn get_number(&self) -> u64 {
         self.number
     }
-    pub fn get_work_product(&self) -> Option<Vec<String>> {
+    pub fn get_work_product(&self) -> Vec<String> {
         get_work_product(&self.title)
     }
 }
